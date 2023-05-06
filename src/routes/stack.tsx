@@ -13,7 +13,7 @@ const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
  */
 const StackNavigator: React.FC = () => {
   return (
-    <Navigator>
+    <Navigator screenOptions={{ headerShown: false }}>
       <Screen name="Tab" component={TabNavigator} />
     </Navigator>
   );

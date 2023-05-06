@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { StackScreenProps } from '@react-navigation/stack';
+// import { IOrderResponse } from '../stores/order';
 
 /**
  * specify undefined inside the component indicates that the route
@@ -25,10 +27,18 @@ export type HomeTabParamList = {
 
 export type RootStackParamList = {
   Tab: NavigatorScreenParams<HomeTabParamList>;
-  Address: undefined;
+  AcceptedOrderDetail: { orderNumber: string };
+  ClosedOrderDetail: { orderNumber: string };
+  SelectRider: any;
+  ManageStore: undefined;
+  CompleteOrder: any;
+  AppSetting: undefined;
+  ChatChannels: any;
+  ChatRoom: { url: string; title: string };
 };
 
 /**
+ * type checking navigation between stack to stack (key stack)
  * follow documentation from React Navigation, refer here
  * https://reactnavigation.org/docs/typescript#organizing-types
  */
@@ -36,6 +46,7 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
   StackScreenProps<RootStackParamList, T>;
 
 /**
+ * type checking nesting navigation from tab to stack (key tab)
  * follow documentation from React Navigation, refer here
  * https://reactnavigation.org/docs/typescript#organizing-types
  */
@@ -46,11 +57,22 @@ export type HomeTabScreenProps<T extends keyof HomeTabParamList> =
   >;
 
 /**
+ * type checking nesting navigation from stack to tab (key stack)
+ * follow documentation from React Navigation, refer here
+ * https://reactnavigation.org/docs/typescript#organizing-types
+ */
+export type StackTabScreenProps<T extends keyof RootStackParamList> =
+  CompositeScreenProps<
+    StackScreenProps<RootStackParamList, T>,
+    BottomTabScreenProps<HomeTabParamList>
+  >;
+
+/**
  * Specifying a global type for your root navigator would
  * avoid manual annotations in many places
  */
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    type RootParamListProps = RootStackParamList;
   }
 }
