@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './stack';
+import LoginMain from '../screens/auth/login';
 import { useStore } from '../hooks';
 
 /**
@@ -8,13 +9,13 @@ import { useStore } from '../hooks';
  * @returns JSX.Element
  */
 const Controller: React.FC = () => {
-  const [state, dispatch] = useStore();
+  const [state] = useStore();
   // console.log('CHECK STATE: ', state);
 
   return (
     <Fragment>
       <NavigationContainer>
-        <StackNavigator />
+        {!state.app.isAuthenticated ? <LoginMain /> : <StackNavigator />}
       </NavigationContainer>
     </Fragment>
   );
