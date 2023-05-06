@@ -35,7 +35,7 @@ export const StoreProvider: ({ children }: any) => JSX.Element = ({
   children,
 }) => {
   const [globalState, dispatch] = useReducer(appReducers, initialState);
-  console.log('CHECK STATE: ', globalState);
+  // console.log('CHECK STATE: ', globalState);
 
   async function getPersistState(): Promise<any> {
     try {
