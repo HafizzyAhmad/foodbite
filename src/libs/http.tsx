@@ -1,23 +1,26 @@
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosError } from 'axios';
+import { ReducerActionType } from '../types/stores/app';
 import URL from '../constants/url';
 import store from '../utils/store';
-import { ReducerActionType } from '../types/stores/app';
 
 class HTTP {
-  token: string;
+  token: string | null;
   instance: AxiosInstance = axios.create({
     baseURL: URL.API,
     timeout: 2000,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-type': 'application/json',
+    },
     responseType: 'json',
   });
-
-  constructor(token: string) {
+  constructor(token: string | null) {
     this.token = token;
 
     // important! assign bearer token here
     // this.instance.defaults.headers.common.Authorization = `Bearer 123`; // uncomment here to test scenario 401
-    this.instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+    if (this.token) {
+      this.instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+    }
 
     // important! assign receptor response handler here
     this.instance.interceptors.response.use(
@@ -50,6 +53,12 @@ class HTTP {
    * @returns any
    */
   responseSuccessInterceptorHandler(response: any): any {
+    console.log(
+      '%c API Response: ',
+      'font-weight: bold; color: #006400',
+      response,
+    );
+
     return response;
   }
 
@@ -59,6 +68,12 @@ class HTTP {
    * @returns Promise<void> | void
    */
   async responseErrorInterceptorHandler(error: AxiosError): Promise<void> {
+    console.log(
+      '%c API Response: ',
+      'font-weight: bold; color: #EC0000',
+      error,
+    );
+
     if (error.message.includes('401')) {
       return store.dispatch({ type: ReducerActionType.LOGOUT });
     }
