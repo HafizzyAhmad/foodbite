@@ -27,6 +27,10 @@ export const completeFetchState = () => {
   return { type: ReducerActionType.COMPLETE_FETCH_STATE };
 };
 
+export const logout = () => {
+  return { type: ReducerActionType.LOGOUT };
+};
+
 export const appReducer: Reducer<IAllStateStores, AppReducerAction> = (
   state: IAllStateStores,
   action: AppReducerAction,
@@ -52,6 +56,10 @@ export const appReducer: Reducer<IAllStateStores, AppReducerAction> = (
       };
     case ReducerActionType.COMPLETE_FETCH_STATE:
       return { ...state, app: { ...state.app, isInitializing: false } };
+    case ReducerActionType.LOGOUT:
+      return {
+        app: appState,
+      };
     default:
       return state;
   }
