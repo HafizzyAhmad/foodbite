@@ -1,9 +1,11 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import PostMain from '../screens/post/main';
 import ProfileMain from '../screens/profile/main';
 import HomeMain from '../screens/home/main';
 import { HomeTabParamList } from '../types/routes/main';
+import Feather from 'react-native-vector-icons/Feather';
 
 const { Navigator, Screen } = createBottomTabNavigator<HomeTabParamList>();
 
@@ -15,8 +17,26 @@ const { Navigator, Screen } = createBottomTabNavigator<HomeTabParamList>();
 const TabNavigator: React.FC = () => {
   return (
     <Navigator
-      screenOptions={() => ({
+      screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarActiveTintColor: 'red',
+        tabBarIcon: ({ color }) => {
+          function getIcon(name: string): string {
+            const path: { [key: string]: string } = {
+              Home: 'home',
+              Post: 'dollar-sign',
+              Profile: 'activity',
+            };
+            return path[name];
+          }
+          return (
+            <Feather
+              name={getIcon(route.name) as string}
+              color={color}
+              size={24}
+            />
+          );
+        },
       })}>
       <Screen name="Home" component={HomeMain} />
       <Screen name="Post" component={PostMain} />
