@@ -27,6 +27,10 @@ export const completeFetchState = () => {
   return { type: ReducerActionType.COMPLETE_FETCH_STATE };
 };
 
+export const authenticateSuccess = (token: string) => {
+  return { type: ReducerActionType.AUTHENTICATION_SUCCESS, payload: token };
+};
+
 export const logout = () => {
   return { type: ReducerActionType.LOGOUT };
 };
@@ -56,6 +60,11 @@ export const appReducer: Reducer<IAllStateStores, AppReducerAction> = (
       };
     case ReducerActionType.COMPLETE_FETCH_STATE:
       return { ...state, app: { ...state.app, isInitializing: false } };
+    case ReducerActionType.AUTHENTICATION_SUCCESS:
+      return {
+        ...state,
+        app: { ...state.app, isAuthenticated: true, token: payload },
+      };
     case ReducerActionType.LOGOUT:
       return {
         app: appState,
