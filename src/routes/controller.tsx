@@ -10,12 +10,13 @@ import { useStore } from '../hooks';
  */
 const Controller: React.FC = () => {
   const [state] = useStore();
-  // console.log('CHECK STATE: ', state);
+  console.log('CHECK STATE: ', state);
 
   return (
     <Fragment>
       <NavigationContainer>
         {!state.app.isAuthenticated ? <LoginMain /> : <StackNavigator />}
+        {/* <StackNavigator /> */}
       </NavigationContainer>
     </Fragment>
   );
