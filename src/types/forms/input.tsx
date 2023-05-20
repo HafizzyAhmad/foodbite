@@ -10,4 +10,5 @@ export type IInputForm = {
   type: string;
   isValid?: boolean;
   errorMessage?: string;
+  secureTextEntry?: boolean;
 };
