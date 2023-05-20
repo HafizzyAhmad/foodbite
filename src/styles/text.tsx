@@ -1,18 +1,20 @@
 import { StyleSheet } from 'react-native';
 import color from './color';
 
-const boldFont = 'NoeDisplay-Bold';
+const brandFont = 'NoeDisplay-Bold';
+const boldFont = 'Poppins-Bold';
 const mediumFont = 'Poppins-SemiBold';
 const regularFont = 'Poppins-Regular';
 
-const XXLARGE = 28;
-const XLARGE = 18;
-const LARGE = 16;
+const XXLARGE = 40;
+const XLARGE = 24;
+const LARGE = 18;
 const REGULAR = 14;
 const SMALL = 12;
 
 const titleScreen = { fontSize: REGULAR, fontFamily: regularFont };
-const largeTitle = { fontSize: XXLARGE, fontFamily: boldFont };
+const largeTitle = { fontSize: XXLARGE, fontFamily: brandFont };
+const titleBrand = { fontSize: XLARGE, fontFamily: brandFont };
 const largeTitleRegular = { fontSize: XLARGE, fontFamily: mediumFont };
 const sectionTitle = { fontSize: XLARGE, fontFamily: boldFont };
 const headingBody = { fontSize: LARGE, fontFamily: mediumFont };
@@ -31,6 +33,7 @@ export default StyleSheet.create({
   lineHeightLarge: { lineHeight: 30 },
   lineHeightBody: { lineHeight: 20 },
 
+  blackScreenBrand: { ...titleBrand, ...color.fontBlack },
   blackHeadlineBold: { ...largeTitle, ...color.fontBlack },
   blackHeadlineRegular: { ...largeTitleRegular, ...color.fontBlack },
   blackTitleScreen: { ...titleScreen, ...color.fontBlack },

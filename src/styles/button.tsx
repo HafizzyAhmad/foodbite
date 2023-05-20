@@ -13,18 +13,20 @@ const WITH_SHADOW = {
 export default StyleSheet.create({
   primary: {
     ...color.bgBrand,
-    ...common.flexCenter,
+    ...common.center,
+    ...common.centerVertically,
     height: 45,
     borderRadius: 30,
-    marginTop: 20,
+    marginVertical: 20,
   },
 
   primaryDisable: {
     ...color.bgLighterGrey,
-    ...common.flexCenter,
+    ...common.center,
+    ...common.centerVertically,
     height: 45,
     borderRadius: 30,
-    marginTop: 20,
+    marginVertical: 20,
   },
 
   secondary: {

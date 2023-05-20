@@ -3,7 +3,7 @@ import COLOR, { colors } from './color';
 import text from './text';
 
 const BASIC_SHADOW = {
-  borderRadius: 4,
+  borderRadius: 8,
   shadowColor: colors.black,
   shadowOffset: { width: 0, height: 1 },
   shadowOpacity: 0.2,
@@ -19,16 +19,19 @@ export default StyleSheet.create({
     padding: 8,
     ...BASIC_SHADOW,
   },
-  address: {
+  input: {
     ...text.blackTitleScreen,
     ...COLOR.bgWhite,
-    padding: 16,
+    // padding: 16,
     marginTop: 4,
     ...BASIC_SHADOW,
-    borderColor: colors.lighterGrey,
+    borderColor: colors.lightestGrey,
     borderWidth: 1,
+    width: '100%',
+    height: 50,
+    lineHeight: 20,
   },
-  addressInvalid: {
+  inputInvalid: {
     ...BASIC_SHADOW,
     ...text.blackTitleScreen,
     ...COLOR.bgWhite,
@@ -36,6 +39,9 @@ export default StyleSheet.create({
     marginTop: 4,
     borderColor: colors.baseRed,
     borderWidth: 0.5,
+    width: '100%',
+    height: 50,
+    lineHeight: 20,
   },
   picker: {
     ...COLOR.bgWhite,

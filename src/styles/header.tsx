@@ -14,4 +14,9 @@ export default StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
   },
+
+  arrowContainer: {
+    paddingVertical: 10,
+    justifyContent: 'center',
+  },
 });

@@ -34,4 +34,13 @@ export default StyleSheet.create({
     height: '10%',
     width: '10%',
   },
+  squareImage: {
+    width: '100%',
+    height: 350,
+  },
+  commonScreen: {
+    width: '100%',
+    height: '40%',
+    // height: '100%',
+  },
 });

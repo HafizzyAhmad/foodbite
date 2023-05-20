@@ -21,6 +21,9 @@ export default StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
   },
+  flexEnd: {
+    justifyContent: 'flex-end',
+  },
   flexRowSpaceBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -36,6 +39,8 @@ export default StyleSheet.create({
   },
   basicContainerNoFlex: {
     padding: 24,
+    flex: 1,
+    ...color.bgLightestBrand,
   },
   basicContainerTitle: {
     paddingHorizontal: 24,
@@ -52,6 +57,9 @@ export default StyleSheet.create({
   },
   paddingSmall: {
     padding: 5,
+  },
+  paddingTopL: {
+    paddingTop: 30,
   },
   paddingBottomS: {
     paddingBottom: 5,
@@ -138,5 +146,8 @@ export default StyleSheet.create({
   horizontalContainerList: {
     flexDirection: 'row',
     paddingBottom: 8,
+  },
+  positionTop60: {
+    top: '60%',
   },
 });
