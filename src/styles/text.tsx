@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 import color from './color';
 
-const boldFont = 'Montserrat-Bold';
-const mediumFont = 'Montserrat-Medium';
-const regularFont = 'Montserrat-Regular';
+const boldFont = 'NoeDisplay-Bold';
+const mediumFont = 'Poppins-SemiBold';
+const regularFont = 'Poppins-Regular';
 
 const XXLARGE = 28;
 const XLARGE = 18;
