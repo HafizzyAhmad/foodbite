@@ -24,7 +24,7 @@ const LoginMain: React.FC = () => {
   const [isLogging, setIsLogging] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginData, setLoginData] = useState<object>({});
-  const [heightOffset, onIncrementFocus] = useOffset();
+  const { heightOffset, onIncrementFocus } = useOffset();
 
   const [emailAddress, setEmailAddress] = useState<string>('');
   const [password, setPassword] = useState<string>('');
