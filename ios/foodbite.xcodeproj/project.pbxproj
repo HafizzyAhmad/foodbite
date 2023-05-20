@@ -30,6 +30,10 @@
 		B5132DE52A0637E000BEF660 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5132DD52A0637DF00BEF660 /* Ionicons.ttf */; };
 		B5132DE62A0637E000BEF660 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5132DD62A0637E000BEF660 /* EvilIcons.ttf */; };
 		B5132DE72A0637E000BEF660 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5132DD72A0637E000BEF660 /* Zocial.ttf */; };
+		B51E452B2A19167E002A48FE /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B51E45272A19167E002A48FE /* Poppins-Bold.ttf */; };
+		B51E452C2A19167E002A48FE /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B51E45282A19167E002A48FE /* Poppins-SemiBold.ttf */; };
+		B51E452D2A19167E002A48FE /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B51E45292A19167E002A48FE /* Poppins-Regular.ttf */; };
+		B51E452E2A19167E002A48FE /* NoeDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B51E452A2A19167E002A48FE /* NoeDisplay-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +79,10 @@
 		B5132DD52A0637DF00BEF660 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		B5132DD62A0637E000BEF660 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		B5132DD72A0637E000BEF660 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		B51E45272A19167E002A48FE /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Bold.ttf"; path = "../assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		B51E45282A19167E002A48FE /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-SemiBold.ttf"; path = "../assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
+		B51E45292A19167E002A48FE /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		B51E452A2A19167E002A48FE /* NoeDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "NoeDisplay-Bold.ttf"; path = "../assets/fonts/NoeDisplay-Bold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -173,6 +181,10 @@
 		B5132DC72A0637AC00BEF660 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				B51E452A2A19167E002A48FE /* NoeDisplay-Bold.ttf */,
+				B51E45272A19167E002A48FE /* Poppins-Bold.ttf */,
+				B51E45292A19167E002A48FE /* Poppins-Regular.ttf */,
+				B51E45282A19167E002A48FE /* Poppins-SemiBold.ttf */,
 				B5132DC92A0637DC00BEF660 /* AntDesign.ttf */,
 				B5132DD42A0637DF00BEF660 /* Entypo.ttf */,
 				B5132DD62A0637E000BEF660 /* EvilIcons.ttf */,
@@ -303,8 +315,11 @@
 				B5132DDD2A0637E000BEF660 /* FontAwesome5_Solid.ttf in Resources */,
 				B5132DDC2A0637E000BEF660 /* Feather.ttf in Resources */,
 				B5132DE72A0637E000BEF660 /* Zocial.ttf in Resources */,
+				B51E452C2A19167E002A48FE /* Poppins-SemiBold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				B51E452B2A19167E002A48FE /* Poppins-Bold.ttf in Resources */,
 				B5132DDA2A0637E000BEF660 /* SimpleLineIcons.ttf in Resources */,
+				B51E452D2A19167E002A48FE /* Poppins-Regular.ttf in Resources */,
 				B5132DE32A0637E000BEF660 /* Fontisto.ttf in Resources */,
 				B5132DE02A0637E000BEF660 /* Foundation.ttf in Resources */,
 				B5132DD92A0637E000BEF660 /* AntDesign.ttf in Resources */,
@@ -314,6 +329,7 @@
 				B5132DDB2A0637E000BEF660 /* Octicons.ttf in Resources */,
 				B5132DD82A0637E000BEF660 /* MaterialIcons.ttf in Resources */,
 				B5132DE12A0637E000BEF660 /* MaterialCommunityIcons.ttf in Resources */,
+				B51E452E2A19167E002A48FE /* NoeDisplay-Bold.ttf in Resources */,
 				B5132DE42A0637E000BEF660 /* Entypo.ttf in Resources */,
 				B5132DDF2A0637E000BEF660 /* FontAwesome5_Brands.ttf in Resources */,
 			);
