@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import Layout from '../../elements/layout';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { common } from '../../styles';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleProp,
+  TextInput,
+  View,
+  ViewStyle,
+} from 'react-native';
+import { common, text } from '../../styles';
 import { Text } from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import ArrowHeader from '../../components/headers/arrowheader';
 import { MALAYSIA } from '../../constants';
 import { IInputForm } from '../../types/forms/input';
 import { useOffset } from '../../hooks/use-offset';
+import Validator from '../../utils/validator';
+import form from '../../styles/form';
+import CustomPicker from '../../libs/picker';
 
 const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
   const { heightOffset, onIncrementFocus } = useOffset();
 
   // form state
-  const [addressName, setAddressName] = useState<string>('');
+  const [donationName, setDonationName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [addressLine, setAddressLine] = useState<string>('');
   const [addressPostcode, setPostcode] = useState<string>('');
   const [addressCity, setCity] = useState<string>('');
@@ -114,7 +126,110 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
           enabled
           keyboardVerticalOffset={Platform.OS === 'ios' ? heightOffset : 0}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          {donateConfig.map(({ key, placeholder, type, ...options }) => {})}
+          {donateConfig.map(({ key, placeholder, type, ...options }) => {
+            /**
+             * simple method to update use state hooks
+             * @param event   string    value captured during change text
+             */
+            function onChangeValue(event: string): void | undefined {
+              if (key === 'addressForm.name') setAddressName(event);
+              if (key === 'addressForm.address') setAddressLine(event);
+              if (key === 'addressForm.postcode') setPostcode(event);
+              if (key === 'addressForm.city') setCity(event);
+              if (key === 'addressForm.mobile') setMobileNumber(event);
+            }
+
+            /**
+             * simple function to provide the value for each input field
+             * @returns string | undefined
+             */
+            function onDetermineValue(): string | undefined {
+              if (key === 'addressForm.name') return addressName;
+              if (key === 'addressForm.address') return addressLine;
+              if (key === 'addressForm.postcode') return addressPostcode;
+              if (key === 'addressForm.city') return addressCity;
+              if (key === 'addressForm.state') return addressState;
+              if (key === 'addressForm.mobile') return mobileNumber;
+            }
+
+            /**
+             * use to determine style on a few input
+             * @returns any
+             */
+            function onDetermineValid(): StyleProp<ViewStyle> {
+              if (key === 'addressForm.postcode') {
+                return isValidPostcode ? form.input : form.inputInvalid;
+              }
+              if (key === 'addressForm.mobile') {
+                return isValidPhone ? form.input : form.inputInvalid;
+              }
+              if (key === 'addressForm.city') {
+                return isValidCity ? form.input : form.inputInvalid;
+              }
+              return form.input;
+            }
+
+            /**
+             * use to determine validity status on blur
+             * @returns void | undefined
+             */
+            function onCheckValid(): void | undefined {
+              if (key === 'addressForm.mobile') {
+                const result: boolean = Validator.mobilePhone(mobileNumber);
+                setIsValidPhone(result);
+              }
+              if (key === 'addressForm.postcode') {
+                const result: boolean = Validator.postcode(addressPostcode);
+                setIsValidPostcode(result);
+              }
+              if (key === 'addressForm.city') {
+                const result: boolean = Validator.allChar(addressCity);
+                setIsValidCity(result);
+              }
+            }
+
+            return (
+              <View key={key} style={common.section}>
+                <Text style={text.greyBodyReg}>{key}</Text>
+                <Fragment>
+                  {type === 'input' ? (
+                    <Fragment>
+                      <TextInput
+                        style={onDetermineValid()}
+                        value={onDetermineValue()}
+                        onBlur={onCheckValid}
+                        onChangeText={onChangeValue}
+                        placeholder={placeholder}
+                        multiline={options.isMultiline}
+                        numberOfLines={options.lineNumber}
+                        maxLength={options.limit}
+                        onFocus={() => onIncrementFocus()}
+                      />
+                      {!options.isValid && (
+                        <Text
+                          style={{
+                            ...text.redErrorText,
+                            ...common.spacingLeft,
+                          }}>
+                          {options.errorMessage}
+                        </Text>
+                      )}
+                    </Fragment>
+                  ) : (
+                    <View style={form.picker}>
+                      <CustomPicker
+                        // key={t(key)}
+                        placeholder={placeholder}
+                        value={options.value}
+                        method={options.method}
+                        data={options.data}
+                      />
+                    </View>
+                  )}
+                </Fragment>
+              </View>
+            );
+          })}
         </KeyboardAvoidingView>
       </ScrollView>
     </Layout>

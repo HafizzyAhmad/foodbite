@@ -25,27 +25,29 @@ const PostMain = ({ navigation }: HomeTabScreenProps<'FoodBite'>) => {
     },
   ];
   return (
-    <Layout custom={[common.basicLayout, common.paddingContainer]}>
-      <Text style={[text.blackHeadlineBold, common.paddingTopL]}>
-        Feel Free to <Text style={[color.fontBrand]}>Donate</Text> or even{' '}
-        <Text style={[color.fontBrand]}>Request for Help</Text>
-        {'.'}
-      </Text>
-      <Image
-        source={IMAGE.mainPost}
-        resizeMode="contain"
-        style={[image.commonScreen, common.centerVertically]}
-      />
-      {post.map(item => (
-        <View key={item.label}>
-          <PostCard
-            icon={item.icon}
-            label={item.label}
-            caption={item.caption}
-            nav={item.onNav}
-          />
-        </View>
-      ))}
+    <Layout custom={[common.basicLayout]}>
+      <View style={common.paddingHorizontalContainer}>
+        <Text style={[text.blackHeadlineBold, common.paddingTopL]}>
+          Feel Free to <Text style={[color.fontBrand]}>Donate</Text> or even{' '}
+          <Text style={[color.fontBrand]}>Request for Help</Text>
+          {'.'}
+        </Text>
+        <Image
+          source={IMAGE.mainPost}
+          resizeMode="contain"
+          style={[image.commonScreen, common.centerVertically]}
+        />
+        {post.map(item => (
+          <View key={item.label}>
+            <PostCard
+              icon={item.icon}
+              label={item.label}
+              caption={item.caption}
+              nav={item.onNav}
+            />
+          </View>
+        ))}
+      </View>
     </Layout>
   );
 };
