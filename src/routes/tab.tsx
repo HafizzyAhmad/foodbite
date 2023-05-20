@@ -19,12 +19,12 @@ const TabNavigator: React.FC = () => {
     <Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: 'red',
+        tabBarActiveTintColor: '#20DD20',
         tabBarIcon: ({ color }) => {
           function getIcon(name: string): string {
             const path: { [key: string]: string } = {
               Home: 'home',
-              Post: 'dollar-sign',
+              FoodBite: 'heart',
               Profile: 'activity',
             };
             return path[name];
@@ -39,7 +39,7 @@ const TabNavigator: React.FC = () => {
         },
       })}>
       <Screen name="Home" component={HomeMain} />
-      <Screen name="Post" component={PostMain} />
+      <Screen name="FoodBite" component={PostMain} />
       <Screen name="Profile" component={ProfileMain} />
     </Navigator>
   );

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   CompositeScreenProps,
   NavigatorScreenParams,
@@ -15,7 +14,7 @@ import type { StackScreenProps } from '@react-navigation/stack';
 
 export type HomeTabParamList = {
   Home: undefined;
-  Post: undefined;
+  FoodBite: undefined;
   Profile: undefined;
 };
 
@@ -27,14 +26,8 @@ export type HomeTabParamList = {
 
 export type RootStackParamList = {
   Tab: NavigatorScreenParams<HomeTabParamList>;
-  AcceptedOrderDetail: { orderNumber: string };
-  ClosedOrderDetail: { orderNumber: string };
-  SelectRider: any;
-  ManageStore: undefined;
-  CompleteOrder: any;
-  AppSetting: undefined;
-  ChatChannels: any;
-  ChatRoom: { url: string; title: string };
+  DonateForm: any;
+  RequestForm: any;
 };
 
 /**
