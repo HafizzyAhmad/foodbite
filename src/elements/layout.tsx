@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import color from '../styles/color';
 import common from '../styles/common';
 
@@ -16,9 +16,9 @@ type LayoutProps = {
 
 function Layout({ children, custom }: LayoutProps) {
   return (
-    <View style={[common.flex1, color.bgLightestBrand, custom]}>
+    <SafeAreaView style={[common.flex1, color.bgLightestBrand, custom]}>
       {children}
-    </View>
+    </SafeAreaView>
   );
 }
 
