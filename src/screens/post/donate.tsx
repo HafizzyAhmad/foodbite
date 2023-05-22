@@ -1,6 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import Layout from '../../elements/layout';
 import {
+  Button,
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -19,11 +21,15 @@ import { useOffset } from '../../hooks/use-offset';
 import Validator from '../../utils/validator';
 import form from '../../styles/form';
 import CustomPicker from '../../libs/picker';
+import * as ImagePicker from 'react-native-image-picker';
+import RNFS from 'react-native-fs';
+import { HandleImageUpload } from '../../libs/uploadimage';
 
 const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
   const { heightOffset, onIncrementFocus } = useOffset();
 
   // form state
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [donationName, setDonationName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [addressLine, setAddressLine] = useState<string>('');
@@ -118,10 +124,56 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       errorMessage: '',
     },
   ];
+
+  // const handleImageUpload = () => {
+  //   ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
+  //     if (response.didCancel) {
+  //       console.log('Image selection cancelled');
+  //     } else if (response.error) {
+  //       console.log('ImagePicker Error:', response.error);
+  //     } else if (response.assets && response.assets.length > 0) {
+  //       const selectedAsset = response.assets[0];
+  //       console.log('SELECTED ASSETS: ', selectedAsset);
+  //       if (selectedAsset.uri) {
+  //         RNFS.readFile(selectedAsset.uri, 'base64')
+  //           .then(base64Image => {
+  //             const imageType = selectedAsset.type;
+  //             const base64ImageData = `data:${imageType};base64,${base64Image}`;
+  //             setSelectedImage(base64ImageData);
+  //             // You can call your upload function here with the base64ImageData
+  //           })
+  //           .catch(error => {
+  //             console.log('Failed to convert image to base64:', error);
+  //           });
+  //       }
+  //     }
+  //   });
+  // };
+
+  const handleImageUpload = () =>
+    HandleImageUpload()
+      .then((base64ImageData: any) => {
+        setSelectedImage(base64ImageData);
+      })
+      .catch(error => {
+        // Handle any errors here
+        // eslint-disable-next-line no-console
+        console.log('Error:', error);
+      });
+
   return (
     <Layout custom={[common.basicLayout]}>
       <ArrowHeader nav={navigation} title="Donation Form" />
       <ScrollView style={common.paddingHorizontalContainer}>
+        <View>
+          <Button title="Select Image" onPress={handleImageUpload} />
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              style={{ width: 200, height: 200 }}
+            />
+          )}
+        </View>
         <KeyboardAvoidingView
           enabled
           keyboardVerticalOffset={Platform.OS === 'ios' ? heightOffset : 0}
@@ -132,11 +184,12 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
              * @param event   string    value captured during change text
              */
             function onChangeValue(event: string): void | undefined {
-              if (key === 'addressForm.name') setAddressName(event);
-              if (key === 'addressForm.address') setAddressLine(event);
-              if (key === 'addressForm.postcode') setPostcode(event);
-              if (key === 'addressForm.city') setCity(event);
-              if (key === 'addressForm.mobile') setMobileNumber(event);
+              if (key === 'Donation Name') setDonationName(event);
+              if (key === 'Description') setDescription(event);
+              if (key === 'Address') setAddressLine(event);
+              if (key === 'Postcode') setPostcode(event);
+              if (key === 'City') setCity(event);
+              if (key === 'Contact No') setMobileNumber(event);
             }
 
             /**
@@ -144,12 +197,13 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
              * @returns string | undefined
              */
             function onDetermineValue(): string | undefined {
-              if (key === 'addressForm.name') return addressName;
-              if (key === 'addressForm.address') return addressLine;
-              if (key === 'addressForm.postcode') return addressPostcode;
-              if (key === 'addressForm.city') return addressCity;
-              if (key === 'addressForm.state') return addressState;
-              if (key === 'addressForm.mobile') return mobileNumber;
+              if (key === 'Donation Name') return donationName;
+              if (key === 'Description') return description;
+              if (key === 'Address') return addressLine;
+              if (key === 'Postcode') return addressPostcode;
+              if (key === 'City') return addressCity;
+              if (key === 'State') return addressState;
+              if (key === 'Contact No') return mobileNumber;
             }
 
             /**
@@ -157,13 +211,13 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
              * @returns any
              */
             function onDetermineValid(): StyleProp<ViewStyle> {
-              if (key === 'addressForm.postcode') {
+              if (key === 'Postcode') {
                 return isValidPostcode ? form.input : form.inputInvalid;
               }
-              if (key === 'addressForm.mobile') {
+              if (key === 'Contact No') {
                 return isValidPhone ? form.input : form.inputInvalid;
               }
-              if (key === 'addressForm.city') {
+              if (key === 'City') {
                 return isValidCity ? form.input : form.inputInvalid;
               }
               return form.input;
@@ -174,15 +228,15 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
              * @returns void | undefined
              */
             function onCheckValid(): void | undefined {
-              if (key === 'addressForm.mobile') {
+              if (key === 'Contact No') {
                 const result: boolean = Validator.mobilePhone(mobileNumber);
                 setIsValidPhone(result);
               }
-              if (key === 'addressForm.postcode') {
+              if (key === 'Postcode') {
                 const result: boolean = Validator.postcode(addressPostcode);
                 setIsValidPostcode(result);
               }
-              if (key === 'addressForm.city') {
+              if (key === 'City') {
                 const result: boolean = Validator.allChar(addressCity);
                 setIsValidCity(result);
               }
