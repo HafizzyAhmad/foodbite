@@ -53,7 +53,9 @@ export default StyleSheet.create({
   whiteHeading: { ...headingBody, ...color.fontWhite },
   whiteBodyHighlight: { ...bodyHighlight, ...color.fontWhite },
   whiteBodyReg: { ...body, ...color.fontWhite },
-  whiteButton: { ...headingBodyBold, ...color.fontWhite },
+  // whiteButton: { ...headingBodyBold, ...color.fontWhite },
+  whiteButton: { ...body, ...color.fontWhite },
+  brandButton: { ...body, ...color.fontBrand },
 
   yellowStatus: { ...captionBold, ...color.fontYellow },
 
