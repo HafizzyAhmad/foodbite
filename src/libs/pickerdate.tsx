@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import form from '../styles/form';
 import Formatter from '../utils/formatter';
+import { text } from '../styles';
 
 const DateTimePicker = ({
   isVisible,
@@ -12,6 +13,7 @@ const DateTimePicker = ({
   maximumDate,
   method,
   isClose,
+  placeholder,
 }: any) => {
   return (
     <View>
@@ -24,7 +26,11 @@ const DateTimePicker = ({
         onCancel={isClose}
       />
       <Pressable onPress={onToggleVisibility} style={form.input}>
-        <Text>{`${Formatter.dateTime(selectedDate)}`}</Text>
+        {selectedDate === '' ? (
+          <Text style={text.greyBodyReg}>{`${placeholder}`}</Text>
+        ) : (
+          <Text>{`${Formatter.dateTime(selectedDate)}`}</Text>
+        )}
       </Pressable>
     </View>
   );
