@@ -28,4 +28,20 @@ function EmptyIcon() {
   return <View style={image.emptyIcon} />;
 }
 
-export { ArrowLeft, IconHeaderRight, DropDown, ChevronRight, EmptyIcon };
+function AddIcon() {
+  return <Feather name="plus-circle" size={25} color="#20DD20" />;
+}
+
+function RemoveIcon() {
+  return <Feather name="minus-circle" size={25} color="#EC0000" />;
+}
+
+export {
+  ArrowLeft,
+  IconHeaderRight,
+  DropDown,
+  ChevronRight,
+  EmptyIcon,
+  AddIcon,
+  RemoveIcon,
+};
