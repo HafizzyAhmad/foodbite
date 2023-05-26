@@ -9,7 +9,7 @@ class Formatter implements IFormatter {
   public dateTime(datetime: string): string {
     const date = new Date(datetime); // The date you want to format
 
-    const day = String(date.getDate()).padStart(2, '0');
+    const day = String(date.getDate());
     const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(
       date,
     );
