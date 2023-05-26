@@ -5,6 +5,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleProp,
   TextInput,
@@ -24,9 +25,17 @@ import CustomPicker from '../../libs/picker';
 import * as ImagePicker from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
 import { HandleImageUpload } from '../../libs/uploadimage';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DateTimePicker from '../../libs/pickerdate';
 
 const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
   const { heightOffset, onIncrementFocus } = useOffset();
+
+  const [isStartDatePickerVisible, setStartDatePickerVisibility] =
+    useState(false);
+  const [selectedStartDate, setSelectedStartDate] = useState('01/01/2001');
+  const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+  const [selectedEndDate, setSelectedEndDate] = useState('01/01/2001');
 
   // form state
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -123,6 +132,32 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       isValid: isValidPhone,
       errorMessage: '',
     },
+    {
+      key: 'Start Date',
+      placeholder: '0123456789',
+      method: (date: string) => handleConfirmStart(date),
+      limit: 12,
+      type: 'datePicker',
+      minimumDate: new Date(),
+      maximumDate: new Date(2023, 11, 31),
+      visible: isStartDatePickerVisible,
+      toggleVisibility: () => showStartDatePicker(),
+      hideVisibility: () => hideStartDatePicker(),
+      value: selectedStartDate,
+    },
+    {
+      key: 'End Date',
+      placeholder: '0123456789',
+      method: (date: string) => handleConfirmEnd(date),
+      limit: 12,
+      type: 'datePicker',
+      minimumDate: new Date(),
+      maximumDate: new Date(2023, 11, 31),
+      visible: isEndDatePickerVisible,
+      toggleVisibility: () => showEndDatePicker(),
+      hideVisibility: () => hideEndDatePicker(),
+      value: selectedEndDate,
+    },
   ];
 
   // const handleImageUpload = () => {
@@ -160,6 +195,58 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
         // eslint-disable-next-line no-console
         console.log('Error:', error);
       });
+
+  const showStartDatePicker = () => {
+    setStartDatePickerVisibility(true);
+  };
+
+  const hideStartDatePicker = () => {
+    setStartDatePickerVisibility(false);
+  };
+
+  const handleConfirmStart = (date: any) => {
+    // Validate the selected date against the minimum and maximum dates
+    const minimumDate = new Date(); // Current date
+    const maximumDate = new Date(2023, 11, 31); // December 31, 2023
+
+    if (
+      (minimumDate && date < minimumDate) ||
+      (maximumDate && date > maximumDate)
+    ) {
+      // Date is outside the allowed range, handle the validation error
+      // You can show an error message, reset the selected date, or take any other appropriate action
+      return;
+    }
+
+    setSelectedStartDate(date);
+    hideStartDatePicker();
+  };
+
+  const showEndDatePicker = () => {
+    setEndDatePickerVisibility(true);
+  };
+
+  const hideEndDatePicker = () => {
+    setEndDatePickerVisibility(false);
+  };
+
+  const handleConfirmEnd = (date: any) => {
+    // Validate the selected date against the minimum and maximum dates
+    const minimumDate = new Date(); // Current date
+    const maximumDate = new Date(2023, 11, 31); // December 31, 2023
+
+    if (
+      (minimumDate && date < minimumDate) ||
+      (maximumDate && date > maximumDate)
+    ) {
+      // Date is outside the allowed range, handle the validation error
+      // You can show an error message, reset the selected date, or take any other appropriate action
+      return;
+    }
+
+    setSelectedEndDate(date);
+    hideEndDatePicker();
+  };
 
   return (
     <Layout custom={[common.basicLayout]}>
@@ -246,7 +333,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
               <View key={key} style={common.section}>
                 <Text style={text.greyBodyReg}>{key}</Text>
                 <Fragment>
-                  {type === 'input' ? (
+                  {type === 'input' && (
                     <Fragment>
                       <TextInput
                         style={onDetermineValid()}
@@ -269,7 +356,8 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
                         </Text>
                       )}
                     </Fragment>
-                  ) : (
+                  )}
+                  {type === 'picker' && (
                     <View style={form.picker}>
                       <CustomPicker
                         // key={t(key)}
@@ -277,6 +365,19 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
                         value={options.value}
                         method={options.method}
                         data={options.data}
+                      />
+                    </View>
+                  )}
+                  {type === 'datePicker' && (
+                    <View style={form.picker}>
+                      <DateTimePicker
+                        isVisible={options.visible}
+                        isClose={options.hideVisibility}
+                        method={options.method}
+                        onToggleVisibility={options.toggleVisibility}
+                        selectedDate={options.value}
+                        minimumDate={options.minimumDate}
+                        maximumDate={options.maximumDate}
                       />
                     </View>
                   )}
