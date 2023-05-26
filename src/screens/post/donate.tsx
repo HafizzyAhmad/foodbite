@@ -1,7 +1,8 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import Layout from '../../elements/layout';
 import {
   Button,
+  FlatList,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -12,7 +13,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { common, text } from '../../styles';
+import { common, list, text } from '../../styles';
 import { Text } from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import ArrowHeader from '../../components/headers/arrowheader';
@@ -22,20 +23,23 @@ import { useOffset } from '../../hooks/use-offset';
 import Validator from '../../utils/validator';
 import form from '../../styles/form';
 import CustomPicker from '../../libs/picker';
-import * as ImagePicker from 'react-native-image-picker';
-import RNFS from 'react-native-fs';
 import { HandleImageUpload } from '../../libs/uploadimage';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DateTimePicker from '../../libs/pickerdate';
+import { IFoodItem } from '../../types/stores/donate';
+import Icon from 'react-native-vector-icons/Feather';
+import { AddIcon, RemoveIcon } from '../../components/icon';
+import BottomActionButton from '../../components/buttons/bottombutton';
 
 const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
   const { heightOffset, onIncrementFocus } = useOffset();
-
+  const textInputRef = useRef<TextInput>(null);
   const [isStartDatePickerVisible, setStartDatePickerVisibility] =
     useState(false);
-  const [selectedStartDate, setSelectedStartDate] = useState('01/01/2001');
+  const [selectedStartDate, setSelectedStartDate] = useState<string>('');
   const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
-  const [selectedEndDate, setSelectedEndDate] = useState('01/01/2001');
+  const [selectedEndDate, setSelectedEndDate] = useState<string>('');
+  const [isInserting, setIsInserting] = useState<boolean>(false);
+  const [foodItem, setFoodItem] = useState<string>('');
 
   // form state
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -47,12 +51,14 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
   const [addressState, setAddressState] = useState<string>('');
   const [mobileNumber, setMobileNumber] = useState<string>('');
 
+  const [food, setFood] = useState<IFoodItem[]>([]);
+
   // form validation
   const [isValidCity, setIsValidCity] = useState<boolean>(true);
   const [isValidPostcode, setIsValidPostcode] = useState<boolean>(true);
   const [isValidPhone, setIsValidPhone] = useState<boolean>(true);
 
-  const donateConfig: IInputForm[] = [
+  const donationConfig: IInputForm[] = [
     {
       key: 'Donation Name',
       placeholder: 'Enter name of donation',
@@ -78,6 +84,35 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       secureTextEntry: false,
     },
     {
+      key: 'Start Date',
+      placeholder: 'Please insert start date',
+      method: (date: string) => handleConfirmStart(date),
+      limit: 12,
+      type: 'datePicker',
+      minimumDate: new Date(),
+      maximumDate: new Date(2023, 11, 31),
+      visible: isStartDatePickerVisible,
+      toggleVisibility: () => showStartDatePicker(),
+      hideVisibility: () => hideStartDatePicker(),
+      value: selectedStartDate,
+    },
+    {
+      key: 'End Date',
+      placeholder: 'Please insert end date',
+      method: (date: string) => handleConfirmEnd(date),
+      limit: 12,
+      type: 'datePicker',
+      minimumDate: new Date(),
+      maximumDate: new Date(2023, 11, 31),
+      visible: isEndDatePickerVisible,
+      toggleVisibility: () => showEndDatePicker(),
+      hideVisibility: () => hideEndDatePicker(),
+      value: selectedEndDate,
+    },
+  ];
+
+  const addressConfig: IInputForm[] = [
+    {
       key: 'Address',
       placeholder: 'eg: A-0-0, Jalan Universiti, UTM Skudai',
       lineNumber: 1,
@@ -93,7 +128,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       key: 'Postcode',
       placeholder: 'eg: 00000',
       lineNumber: 1,
-      isMultiline: true,
+      isMultiline: false,
       method: () => null,
       limit: 5,
       type: 'input',
@@ -105,7 +140,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       key: 'City',
       placeholder: 'eg: Skudai',
       lineNumber: 1,
-      isMultiline: true,
+      isMultiline: false,
       method: () => null,
       limit: 10,
       type: 'input',
@@ -132,58 +167,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       isValid: isValidPhone,
       errorMessage: '',
     },
-    {
-      key: 'Start Date',
-      placeholder: '0123456789',
-      method: (date: string) => handleConfirmStart(date),
-      limit: 12,
-      type: 'datePicker',
-      minimumDate: new Date(),
-      maximumDate: new Date(2023, 11, 31),
-      visible: isStartDatePickerVisible,
-      toggleVisibility: () => showStartDatePicker(),
-      hideVisibility: () => hideStartDatePicker(),
-      value: selectedStartDate,
-    },
-    {
-      key: 'End Date',
-      placeholder: '0123456789',
-      method: (date: string) => handleConfirmEnd(date),
-      limit: 12,
-      type: 'datePicker',
-      minimumDate: new Date(),
-      maximumDate: new Date(2023, 11, 31),
-      visible: isEndDatePickerVisible,
-      toggleVisibility: () => showEndDatePicker(),
-      hideVisibility: () => hideEndDatePicker(),
-      value: selectedEndDate,
-    },
   ];
-
-  // const handleImageUpload = () => {
-  //   ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
-  //     if (response.didCancel) {
-  //       console.log('Image selection cancelled');
-  //     } else if (response.error) {
-  //       console.log('ImagePicker Error:', response.error);
-  //     } else if (response.assets && response.assets.length > 0) {
-  //       const selectedAsset = response.assets[0];
-  //       console.log('SELECTED ASSETS: ', selectedAsset);
-  //       if (selectedAsset.uri) {
-  //         RNFS.readFile(selectedAsset.uri, 'base64')
-  //           .then(base64Image => {
-  //             const imageType = selectedAsset.type;
-  //             const base64ImageData = `data:${imageType};base64,${base64Image}`;
-  //             setSelectedImage(base64ImageData);
-  //             // You can call your upload function here with the base64ImageData
-  //           })
-  //           .catch(error => {
-  //             console.log('Failed to convert image to base64:', error);
-  //           });
-  //       }
-  //     }
-  //   });
-  // };
 
   const handleImageUpload = () =>
     HandleImageUpload()
@@ -248,24 +232,148 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
     hideEndDatePicker();
   };
 
+  const [foodItems, setFoodItems] = useState<IFoodItem[]>([]);
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [idCounter, setIdCounter] = useState(1);
+
+  const handleAddItem = () => {
+    if (name && price) {
+      const newItem: IFoodItem = { id: idCounter.toString(), name, price };
+      setFoodItems(prevItems => [...prevItems, newItem]);
+      setName('');
+      setPrice('');
+      setIdCounter(prevCounter => prevCounter + 1);
+    }
+  };
+
+  const handleRemoveItem = (id: string) => {
+    setFoodItems(prevItems => prevItems.filter(item => item.id !== id));
+  };
+
+  const handleSubmit = () => {
+    const param = {
+      image: selectedImage,
+      type: 'Donation',
+      createdById: 'string',
+      donation: {
+        name: donationName,
+        description: description,
+      },
+      address: addressLine,
+      postcode: addressPostcode,
+      city: addressCity,
+      state: addressState,
+      mobileNumber: mobileNumber,
+      geoLocation: {
+        latitude: '200000',
+        longitude: '100000',
+      },
+      statusAvailability: {
+        startDateTime: selectedStartDate,
+        endDateTime: selectedEndDate,
+        status: 'Submitted',
+      },
+      items: foodItems,
+    };
+
+    console.log('CHECK PARAMS: ', param);
+  };
+
   return (
     <Layout custom={[common.basicLayout]}>
       <ArrowHeader nav={navigation} title="Donation Form" />
-      <ScrollView style={common.paddingHorizontalContainer}>
-        <View>
-          <Button title="Select Image" onPress={handleImageUpload} />
-          {selectedImage && (
-            <Image
-              source={{ uri: selectedImage }}
-              style={{ width: 200, height: 200 }}
-            />
-          )}
-        </View>
+      <ScrollView style={[common.paddingHorizontalContainer]}>
         <KeyboardAvoidingView
           enabled
           keyboardVerticalOffset={Platform.OS === 'ios' ? heightOffset : 0}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          {donateConfig.map(({ key, placeholder, type, ...options }) => {
+          <Text style={[text.blackHeadingBold, common.paddingBottomM]}>
+            Introduction
+          </Text>
+
+          {donationConfig.map(({ key, placeholder, type, ...options }) => {
+            /**
+             * simple method to update use state hooks
+             * @param event   string    value captured during change text
+             */
+            function onChangeValue(event: string): void | undefined {
+              if (key === 'Donation Name') setDonationName(event);
+              if (key === 'Description') setDescription(event);
+            }
+
+            /**
+             * simple function to provide the value for each input field
+             * @returns string | undefined
+             */
+            function onDetermineValue(): string | undefined {
+              if (key === 'Donation Name') return donationName;
+              if (key === 'Description') return description;
+            }
+
+            return (
+              <View key={key} style={common.section}>
+                <Text style={text.greyBodyReg}>{key}</Text>
+                <Fragment>
+                  {type === 'input' && (
+                    <Fragment>
+                      <TextInput
+                        style={form.input}
+                        value={onDetermineValue()}
+                        onChangeText={onChangeValue}
+                        placeholder={placeholder}
+                        multiline={options.isMultiline}
+                        numberOfLines={options.lineNumber}
+                        maxLength={options.limit}
+                        onFocus={() => onIncrementFocus()}
+                      />
+                      {!options.isValid && (
+                        <Text
+                          style={{
+                            ...text.redErrorText,
+                            ...common.spacingLeft,
+                          }}>
+                          {options.errorMessage}
+                        </Text>
+                      )}
+                    </Fragment>
+                  )}
+                  {type === 'picker' && (
+                    <View style={form.picker}>
+                      <CustomPicker
+                        // key={t(key)}
+                        placeholder={placeholder}
+                        value={options.value}
+                        method={options.method}
+                        data={options.data}
+                      />
+                    </View>
+                  )}
+                  {type === 'datePicker' && (
+                    <DateTimePicker
+                      isVisible={options.visible}
+                      placeholder={placeholder}
+                      isClose={options.hideVisibility}
+                      method={options.method}
+                      onToggleVisibility={options.toggleVisibility}
+                      selectedDate={options.value}
+                      minimumDate={options.minimumDate}
+                      maximumDate={options.maximumDate}
+                    />
+                  )}
+                </Fragment>
+              </View>
+            );
+          })}
+          <Text
+            style={[
+              text.blackHeadingBold,
+              common.paddingBottomM,
+              common.paddingTopL,
+            ]}>
+            Location
+          </Text>
+          {addressConfig.map(({ key, placeholder, type, ...options }) => {
             /**
              * simple method to update use state hooks
              * @param event   string    value captured during change text
@@ -369,24 +477,94 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
                     </View>
                   )}
                   {type === 'datePicker' && (
-                    <View style={form.picker}>
-                      <DateTimePicker
-                        isVisible={options.visible}
-                        isClose={options.hideVisibility}
-                        method={options.method}
-                        onToggleVisibility={options.toggleVisibility}
-                        selectedDate={options.value}
-                        minimumDate={options.minimumDate}
-                        maximumDate={options.maximumDate}
-                      />
-                    </View>
+                    <DateTimePicker
+                      isVisible={options.visible}
+                      placeholder={placeholder}
+                      isClose={options.hideVisibility}
+                      method={options.method}
+                      onToggleVisibility={options.toggleVisibility}
+                      selectedDate={options.value}
+                      minimumDate={options.minimumDate}
+                      maximumDate={options.maximumDate}
+                    />
                   )}
                 </Fragment>
               </View>
             );
           })}
+          <View style={[common.paddingTopL]}>
+            <Text style={[text.blackHeadingBold]}>Donation Item</Text>
+            <FlatList
+              data={foodItems}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={common.paddingBottomS}
+              renderItem={({ item }) => (
+                <View
+                  style={[
+                    common.flexRowSpaceBetween,
+                    common.centerVertically,
+                    common.paddingVerticalSmall,
+                  ]}>
+                  <View style={[form.inputRow70Disable]}>
+                    <Text style={[text.greyBodyReg]}>{item.name}</Text>
+                  </View>
+                  <View style={[form.inputRow20Disable]}>
+                    <Text style={[text.greyBodyReg]}>{item.price}</Text>
+                  </View>
+                  <Pressable
+                    onPress={() => handleRemoveItem(item.id)}
+                    style={[]}>
+                    <RemoveIcon />
+                  </Pressable>
+                </View>
+              )}
+            />
+            <View style={[common.flexRowSpaceBetween, common.centerVertically]}>
+              <TextInput
+                style={form.inputRow70}
+                value={name}
+                onChangeText={foodName => setName(foodName)}
+                placeholder="Name"
+              />
+              <TextInput
+                style={form.inputRow20}
+                keyboardType="decimal-pad"
+                value={price}
+                onChangeText={foodPrice => setPrice(foodPrice)}
+                placeholder="Price"
+              />
+              <Pressable onPress={handleAddItem} style={[]}>
+                <AddIcon />
+              </Pressable>
+            </View>
+          </View>
+          <View style={[common.paddingTopL]}>
+            <Text style={[text.blackHeadingBold, common.paddingBottomM]}>
+              Upload Image
+            </Text>
+            {selectedImage ? (
+              <Fragment>
+                <Image
+                  source={{ uri: selectedImage }}
+                  style={{ width: '100%', height: 200 }}
+                />
+                <Button title="Select New Image" onPress={handleImageUpload} />
+              </Fragment>
+            ) : (
+              <View style={form.imageBlank}>
+                <Pressable onPress={handleImageUpload}>
+                  <Text style={[text.brandButton]}>Select Image</Text>
+                </Pressable>
+              </View>
+            )}
+          </View>
         </KeyboardAvoidingView>
       </ScrollView>
+      <BottomActionButton
+        content={'Submit Donation'}
+        onPress={handleSubmit}
+        isInactive={false}
+      />
     </Layout>
   );
 };
