@@ -11,4 +11,9 @@ export type IInputForm = {
   isValid?: boolean;
   errorMessage?: string;
   secureTextEntry?: boolean;
+  minimumDate?: any;
+  maximumDate?: any;
+  visible?: boolean;
+  toggleVisibility?: () => void;
+  hideVisibility?: () => void;
 };

@@ -30,6 +30,8 @@ export default StyleSheet.create({
     width: '100%',
     height: 50,
     lineHeight: 20,
+    justifyContent: 'center',
+    padding: 10,
   },
   inputInvalid: {
     ...BASIC_SHADOW,
