@@ -1,6 +1,6 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
-
+$RNMapboxMapsImpl = 'mapbox'
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
@@ -23,7 +23,7 @@ end
 
 target 'foodbite' do
   config = use_native_modules!
-
+  # pod 'MapboxMaps', '10.13.1'
   # Flags change depending on the env values.
   flags = get_default_flags()
 
