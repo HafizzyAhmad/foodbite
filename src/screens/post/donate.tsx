@@ -142,7 +142,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       lineNumber: 1,
       isMultiline: false,
       method: () => null,
-      limit: 10,
+      limit: 20,
       type: 'input',
       isValid: true,
       errorMessage: 'Please enter password',

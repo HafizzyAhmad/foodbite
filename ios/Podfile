@@ -22,6 +22,13 @@ if linkage != nil
 end
 
 target 'foodbite' do
+  # React Native Maps dependencies
+  # The following line is only needed if building on an Apple silicon Mac without rosetta.
+  pod 'Google-Maps-iOS-Utils', :git => 'https://github.com/Simon-TechForm/google-maps-ios-utils.git', :branch => 'feat/support-apple-silicon'
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  pod 'GoogleMaps', '7.4.0'
+  # pod 'Google-Maps-iOS-Utils', '4.1.0'
   config = use_native_modules!
 
   # Flags change depending on the env values.
