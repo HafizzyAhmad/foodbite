@@ -25,6 +25,10 @@ export default StyleSheet.create({
     // resizeMode: 'stretch',
     alignItems: 'center',
   },
+  selectedThumbnail: {
+    width: '100%',
+    height: 200,
+  },
   premiseType: {
     width: 30,
     height: 30,

@@ -40,4 +40,5 @@ export default StyleSheet.create({
   borderGrey: { borderColor: colors.lighterGrey },
   borderBlack: { borderColor: colors.black },
   borderRed: { borderColor: colors.baseBrand },
+  borderBrand: { borderColor: colors.baseBrand },
 });

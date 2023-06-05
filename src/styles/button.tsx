@@ -30,12 +30,12 @@ export default StyleSheet.create({
   },
 
   secondary: {
-    ...color.borderBlack,
+    ...color.borderBrand,
     ...common.flexCenter,
     borderWidth: 1,
     height: 45,
     borderRadius: 30,
-    marginTop: 20,
+    marginVertical: 20,
   },
 
   modalPrimaryButton: {
