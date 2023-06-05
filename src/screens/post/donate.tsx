@@ -1,6 +1,7 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import Layout from '../../elements/layout';
 import {
+  Alert,
   Button,
   FlatList,
   Image,
@@ -13,7 +14,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { common, list, text } from '../../styles';
+import { common, image, text } from '../../styles';
 import { Text } from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import ArrowHeader from '../../components/headers/arrowheader';
@@ -26,20 +27,17 @@ import CustomPicker from '../../libs/picker';
 import { HandleImageUpload } from '../../libs/uploadimage';
 import DateTimePicker from '../../libs/pickerdate';
 import { IFoodItem } from '../../types/stores/donate';
-import Icon from 'react-native-vector-icons/Feather';
 import { AddIcon, RemoveIcon } from '../../components/icon';
 import BottomActionButton from '../../components/buttons/bottombutton';
+import LocationPickerModal from '../../components/modals/picklocation';
 
 const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
   const { heightOffset, onIncrementFocus } = useOffset();
-  const textInputRef = useRef<TextInput>(null);
   const [isStartDatePickerVisible, setStartDatePickerVisibility] =
     useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState<string>('');
   const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
   const [selectedEndDate, setSelectedEndDate] = useState<string>('');
-  const [isInserting, setIsInserting] = useState<boolean>(false);
-  const [foodItem, setFoodItem] = useState<string>('');
 
   // form state
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -51,12 +49,26 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
   const [addressState, setAddressState] = useState<string>('');
   const [mobileNumber, setMobileNumber] = useState<string>('');
 
-  const [food, setFood] = useState<IFoodItem[]>([]);
+  // location coordinate
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<any>({});
 
   // form validation
   const [isValidCity, setIsValidCity] = useState<boolean>(true);
   const [isValidPostcode, setIsValidPostcode] = useState<boolean>(true);
   const [isValidPhone, setIsValidPhone] = useState<boolean>(true);
+
+  const handleLocationSelect = (coordinate: {
+    latitude: any;
+    longitude: any;
+  }) => {
+    setSelectedLocation([coordinate.latitude, coordinate.longitude]);
+    setModalVisible(false);
+  };
+
+  const handleModalClose = () => {
+    setModalVisible(false);
+  };
 
   const donationConfig: IInputForm[] = [
     {
@@ -155,6 +167,13 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       value: addressState,
       method: (state: string) => setAddressState(state),
       type: 'picker',
+    },
+    {
+      key: 'Add Precise Location',
+      placeholder: 'eg: Skudai',
+      value: selectedLocation,
+      method: () => setModalVisible(true),
+      type: 'picklocation',
     },
     {
       key: 'Contact No',
@@ -266,8 +285,8 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       state: addressState,
       mobileNumber: mobileNumber,
       geoLocation: {
-        latitude: '200000',
-        longitude: '100000',
+        latitude: selectedLocation[0],
+        longitude: selectedLocation[1],
       },
       statusAvailability: {
         startDateTime: selectedStartDate,
@@ -277,7 +296,30 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       items: foodItems,
     };
 
+    const excludedKeys = ['image']; // Specify the keys to exclude from empty string check
+    const hasEmptyString = Object.entries(param).some(([key, value]) => {
+      return (
+        !excludedKeys.includes(key) &&
+        (value === '' ||
+          (key === 'items' && Array.isArray(value) && value.length === 0))
+      );
+    });
+
+    if (hasEmptyString) {
+      // At least one parameter has an empty string
+      Alert.alert('Please fill in the information required');
+    } else {
+      // All parameters have a value
+      // eslint-disable-next-line no-console
+      console.log('All parameters have a value.');
+
+      // Proceed with further logic or API call
+    }
+
+    // eslint-disable-next-line no-console
     console.log('CHECK PARAMS: ', param);
+
+    //
   };
 
   return (
@@ -488,6 +530,20 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
                       maximumDate={options.maximumDate}
                     />
                   )}
+                  {type === 'picklocation' && (
+                    <Pressable style={form.input} onPress={options.method}>
+                      <Text
+                        style={
+                          options.value === undefined
+                            ? text.greyBodyReg
+                            : text.blackBodyReg
+                        }>
+                        {options.value === undefined
+                          ? placeholder
+                          : `${options.value[0]}, ${options.value[1]}`}
+                      </Text>
+                    </Pressable>
+                  )}
                 </Fragment>
               </View>
             );
@@ -546,7 +602,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
               <Fragment>
                 <Image
                   source={{ uri: selectedImage }}
-                  style={{ width: '100%', height: 200 }}
+                  style={image.selectedThumbnail}
                 />
                 <Button title="Select New Image" onPress={handleImageUpload} />
               </Fragment>
@@ -564,6 +620,11 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
         content={'Submit Donation'}
         onPress={handleSubmit}
         isInactive={false}
+      />
+      <LocationPickerModal
+        visible={modalVisible}
+        onClose={handleModalClose}
+        onLocationSelect={handleLocationSelect}
       />
     </Layout>
   );

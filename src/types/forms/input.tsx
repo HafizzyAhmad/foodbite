@@ -6,7 +6,7 @@ export type IInputForm = {
   limit?: number;
   data?: any;
   method: ([key]: any) => void;
-  value?: string;
+  value?: any;
   type: string;
   isValid?: boolean;
   errorMessage?: string;
