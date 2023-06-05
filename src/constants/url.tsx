@@ -4,7 +4,7 @@ export default {
   get base() {
     const prefix = this.isProduction
       ? 'robin.foodbite.com.my'
-      : 'http://192.168.0.173:8080';
+      : 'http://192.168.0.124:8080';
     return prefix;
   },
 

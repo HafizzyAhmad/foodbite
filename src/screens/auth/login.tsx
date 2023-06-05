@@ -55,8 +55,6 @@ const LoginMain: React.FC = () => {
       };
 
       const isValid = Object.values(bool).every(val => val);
-      console.log('========== IS VALID: ', isValid);
-      console.log('=-====== IS FILLED: ', isFilled);
 
       setDisabledLogin(isFilled && isValid);
     }
@@ -132,8 +130,9 @@ const LoginMain: React.FC = () => {
       <View style={[common.basicLayout, common.paddingContainer]}>
         <KeyboardAvoidingView
           enabled
-          keyboardVerticalOffset={Platform.OS === 'ios' ? heightOffset : 0}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          // keyboardVerticalOffset={Platform.OS === 'ios' ? heightOffset : 0}
+          // behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
           {loginConfig.map(
             ({ key, placeholder, type, secureTextEntry, ...options }) => {
               /**
