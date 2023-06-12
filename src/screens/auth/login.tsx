@@ -4,6 +4,7 @@ import AuthAPI from '../../api/auth';
 import { IAuthLoginRequest } from '../../types/stores/app';
 import { IInputForm } from '../../types/forms/input';
 import {
+  Alert,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
@@ -65,20 +66,18 @@ const LoginMain: React.FC = () => {
   const authAPI = new AuthAPI(null);
 
   const params = {
-    email: emailAddress,
+    email: emailAddress.toLocaleLowerCase(),
     password: password,
   };
 
   async function onLogin() {
-    console.log('CHECK PARAM: ', params);
-
     try {
       const res = await authAPI.login(params);
       if (res) {
-        dispatch(authenticateSuccess(res.token));
+        dispatch(authenticateSuccess(res));
       }
     } catch (error) {
-      console.log('CHECK ERROR: ', error);
+      Alert.alert(error as string);
     }
   }
 

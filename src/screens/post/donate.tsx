@@ -26,25 +26,31 @@ import form from '../../styles/form';
 import CustomPicker from '../../libs/picker';
 import { HandleImageUpload } from '../../libs/uploadimage';
 import DateTimePicker from '../../libs/pickerdate';
-import { IFoodItem } from '../../types/stores/donate';
+import { IFoodItem, IPost } from '../../types/stores/donate';
 import { AddIcon, RemoveIcon } from '../../components/icon';
 import BottomActionButton from '../../components/buttons/bottombutton';
 import LocationPickerModal from '../../components/modals/picklocation';
+import { useStore } from '../../hooks';
+import { addPost, addPostFailed, addPostSuccess } from '../../stores/post';
+import PostAPI from '../../api/post';
 
 const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
+  const [globalState, dispatch] = useStore();
+  const { app } = globalState;
   const { heightOffset, onIncrementFocus } = useOffset();
   const [isStartDatePickerVisible, setStartDatePickerVisibility] =
     useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState<string>('');
   const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
   const [selectedEndDate, setSelectedEndDate] = useState<string>('');
+  const postAPI = new PostAPI(app.token);
 
   // form state
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string>('');
   const [donationName, setDonationName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [addressLine, setAddressLine] = useState<string>('');
-  const [addressPostcode, setPostcode] = useState<string>('');
+  const [addressPostcode, setPostcode] = useState<number>(0);
   const [addressCity, setCity] = useState<string>('');
   const [addressState, setAddressState] = useState<string>('');
   const [mobileNumber, setMobileNumber] = useState<string>('');
@@ -55,7 +61,6 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
 
   // form validation
   const [isValidCity, setIsValidCity] = useState<boolean>(true);
-  const [isValidPostcode, setIsValidPostcode] = useState<boolean>(true);
   const [isValidPhone, setIsValidPhone] = useState<boolean>(true);
 
   const handleLocationSelect = (coordinate: {
@@ -270,11 +275,26 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
     setFoodItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
-  const handleSubmit = () => {
+  async function onSubmit(params: IPost) {
+    dispatch(addPost());
+    try {
+      const res: IPost = await postAPI.postForm(params);
+      if (res) {
+        dispatch(addPostSuccess());
+        return true;
+      }
+    } catch (error) {
+      dispatch(addPostFailed());
+      Alert.alert('Oh uh! Something went wrong. Please try again later.');
+      return false;
+    }
+  }
+
+  const handleSubmit = async () => {
     const param = {
       image: selectedImage,
       type: 'Donation',
-      createdById: 'string',
+      createdById: app.profile._id,
       donation: {
         name: donationName,
         description: description,
@@ -312,19 +332,14 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       // All parameters have a value
       // eslint-disable-next-line no-console
       console.log('All parameters have a value.');
-
-      // Proceed with further logic or API call
+      const success = await onSubmit(param);
+      if (success) return navigation.navigate('Complete', { ...param });
     }
-
-    // eslint-disable-next-line no-console
-    console.log('CHECK PARAMS: ', param);
-
-    //
   };
 
   return (
     <Layout custom={[common.basicLayout]}>
-      <ArrowHeader nav={navigation} title="Donation Form" />
+      <ArrowHeader nav={navigation} title="Donation Form" disableBack={false} />
       <ScrollView style={[common.paddingHorizontalContainer]}>
         <KeyboardAvoidingView
           enabled
@@ -420,7 +435,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
              * simple method to update use state hooks
              * @param event   string    value captured during change text
              */
-            function onChangeValue(event: string): void | undefined {
+            function onChangeValue(event: any): void | undefined {
               if (key === 'Donation Name') setDonationName(event);
               if (key === 'Description') setDescription(event);
               if (key === 'Address') setAddressLine(event);
@@ -433,7 +448,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
              * simple function to provide the value for each input field
              * @returns string | undefined
              */
-            function onDetermineValue(): string | undefined {
+            function onDetermineValue(): any | undefined {
               if (key === 'Donation Name') return donationName;
               if (key === 'Description') return description;
               if (key === 'Address') return addressLine;
@@ -448,9 +463,6 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
              * @returns any
              */
             function onDetermineValid(): StyleProp<ViewStyle> {
-              if (key === 'Postcode') {
-                return isValidPostcode ? form.input : form.inputInvalid;
-              }
               if (key === 'Contact No') {
                 return isValidPhone ? form.input : form.inputInvalid;
               }
@@ -467,11 +479,9 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
             function onCheckValid(): void | undefined {
               if (key === 'Contact No') {
                 const result: boolean = Validator.mobilePhone(mobileNumber);
+                console.log('CHEK PHONE: ', result);
+
                 setIsValidPhone(result);
-              }
-              if (key === 'Postcode') {
-                const result: boolean = Validator.postcode(addressPostcode);
-                setIsValidPostcode(result);
               }
               if (key === 'City') {
                 const result: boolean = Validator.allChar(addressCity);
