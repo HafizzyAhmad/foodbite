@@ -23,6 +23,7 @@
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-prettier": "^4.2.1",
     "geolib": "^3.3.4",
+    "lottie-react-native": "^5.1.6",
     "patch-package": "^7.0.0",
     "react": "18.2.0",
     "react-native": "0.71.4",
