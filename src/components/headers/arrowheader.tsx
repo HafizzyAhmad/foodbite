@@ -11,12 +11,14 @@ type Props = {
   nav?: any;
   title?: string;
 };
-function ArrowHeader({ nav, title }: Props) {
+function ArrowHeader({ nav, title, disableBack }: Props) {
   return (
     <View style={[common.paddingHorizontalContainer, header.arrowContainer]}>
-      <TouchableOpacity onPress={() => nav.goBack()}>
-        <ArrowLeft />
-      </TouchableOpacity>
+      {!disableBack && (
+        <TouchableOpacity onPress={() => nav.goBack()}>
+          <ArrowLeft />
+        </TouchableOpacity>
+      )}
       <Text style={[text.blackScreenBrand, common.paddingVerticalMedium]}>
         {title}
       </Text>
