@@ -13,6 +13,7 @@ export const appState: IAppStore = {
   theme: 'light',
   isAuthenticated: false,
   token: '',
+  profile: null,
 };
 
 export const initState = (app: any) => {
@@ -27,8 +28,8 @@ export const completeFetchState = () => {
   return { type: ReducerActionType.COMPLETE_FETCH_STATE };
 };
 
-export const authenticateSuccess = (token: string) => {
-  return { type: ReducerActionType.AUTHENTICATION_SUCCESS, payload: token };
+export const authenticateSuccess = (profile: any) => {
+  return { type: ReducerActionType.AUTHENTICATION_SUCCESS, payload: profile };
 };
 
 export const logout = () => {
@@ -63,7 +64,12 @@ export const appReducer: Reducer<IAllStateStores, AppReducerAction> = (
     case ReducerActionType.AUTHENTICATION_SUCCESS:
       return {
         ...state,
-        app: { ...state.app, isAuthenticated: true, token: payload },
+        app: {
+          ...state.app,
+          isAuthenticated: true,
+          token: payload.token,
+          profile: payload.user,
+        },
       };
     case ReducerActionType.LOGOUT:
       return {
