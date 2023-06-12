@@ -12,6 +12,7 @@ export interface IAppStore {
   theme: string;
   isAuthenticated: boolean;
   token: string;
+  profile: any;
 }
 
 export interface IAuthLoginRequest {

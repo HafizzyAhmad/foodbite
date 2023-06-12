@@ -28,6 +28,7 @@ export type RootStackParamList = {
   Tab: NavigatorScreenParams<HomeTabParamList>;
   DonateForm: any;
   RequestForm: any;
+  Complete: undefined;
 };
 
 /**
