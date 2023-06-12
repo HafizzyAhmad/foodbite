@@ -1,7 +1,6 @@
+/* eslint-disable no-console */
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import { ReducerActionType } from '../types/stores/app';
 import URL from '../constants/url';
-import store from '../utils/store';
 
 class HTTP {
   token: string | null;
@@ -19,7 +18,7 @@ class HTTP {
     // important! assign bearer token here
     // this.instance.defaults.headers.common.Authorization = `Bearer 123`; // uncomment here to test scenario 401
     if (this.token) {
-      this.instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+      this.instance.defaults.headers.common.Authorization = token;
     }
 
     // important! assign receptor response handler here
@@ -75,7 +74,8 @@ class HTTP {
     );
 
     if (error.message.includes('401')) {
-      return store.dispatch({ type: ReducerActionType.LOGOUT });
+      console.log('KENAPA LOGOUT: ', error.message);
+      // return store.dispatch({ type: ReducerActionType.LOGOUT });
     }
 
     if (error.message.includes('404')) {
