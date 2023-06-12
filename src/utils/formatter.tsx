@@ -3,7 +3,7 @@ import { IFormatter } from '../types/utils/formatter';
 class Formatter implements IFormatter {
   /**
    * use this method to validate all number string provided in postcode textinput
-   * @param     postcode    string      input insert by user
+   * @param     datetime    string      input insert by user
    * @returns boolean
    */
   public dateTime(datetime: string): string {
