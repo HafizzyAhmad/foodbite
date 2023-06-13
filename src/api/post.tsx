@@ -1,5 +1,5 @@
 import HTTP from '../libs/http';
-import { IPost } from '../types/stores/donate';
+import { IPost, IPostByCoordinateRequest } from '../types/stores/donate';
 
 class PostAPI extends HTTP {
   /**
@@ -11,6 +11,13 @@ class PostAPI extends HTTP {
 
     const url = '/v1/food/donate';
     const res = await this.post(url, data);
+    return res;
+  }
+
+  async getPostByCoordinate(data: IPostByCoordinateRequest): Promise<IPost[]> {
+    const { centerLat, centerLong, distance } = data;
+    const url = `/v1/food/donations/lat=${centerLat}&long=${centerLong}&distance=${distance}`;
+    const res = await this.get(url);
     return res;
   }
 }

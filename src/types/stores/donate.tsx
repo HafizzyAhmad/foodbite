@@ -2,6 +2,9 @@ export enum PostReducerActionType {
   ADD_POST = 'POST/ADD_POST',
   ADD_POST_SUCCESS = 'POST/ADD_POST_SUCCESS',
   ADD_POST_FAILED = 'POST/ADD_POST_FAILED',
+  GET_POST_BY_COORDINATE = 'POST/GET_POST_BY_COORDINATE',
+  GET_POST_BY_COORDINATE_SUCCESS = 'POST/GET_POST_BY_COORDINATE_SUCCESS',
+  GET_POST_BY_COORDINATE_FAILED = 'GET_POST_BY_COORDINATE_FAILED',
 }
 
 export interface IFoodItem {
@@ -33,6 +36,12 @@ export interface IPost {
     status: string;
   };
   items: IFoodItem[];
+}
+
+export interface IPostByCoordinateRequest {
+  centerLat: number;
+  centerLong: number;
+  distance: number;
 }
 
 export interface IPostStore {
