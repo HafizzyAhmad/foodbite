@@ -5,6 +5,7 @@ import { RootStackParamList } from '../types/routes/main';
 import DonateForm from '../screens/post/donate';
 import RequestForm from '../screens/post/request';
 import Complete from '../screens/post/complete';
+import PostDetail from '../screens/post/detail';
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,6 +22,7 @@ const StackNavigator: React.FC = () => {
       <Screen name="DonateForm" component={DonateForm} />
       <Screen name="RequestForm" component={RequestForm} />
       <Screen name="Complete" component={Complete} />
+      <Screen name="PostDetail" component={PostDetail} />
     </Navigator>
   );
 };
