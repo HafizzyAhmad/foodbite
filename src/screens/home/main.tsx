@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 // Import Map and Marker
 import MapView, { Circle, Marker } from 'react-native-maps';
-import { text } from '../../styles';
+import { card, text } from '../../styles';
 import Geolocation from '@react-native-community/geolocation';
 import Feather from 'react-native-vector-icons/Feather';
 import * as geolib from 'geolib';
@@ -27,11 +27,7 @@ import {
   getPostByCoordinateSuccess,
 } from '../../stores/post';
 import PostAPI from '../../api/post';
-import {
-  HomeTabParamList,
-  HomeTabScreenProps,
-  RootStackParamList,
-} from '../../types/routes/main';
+import { HomeTabScreenProps } from '../../types/routes/main';
 
 const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   const mapRef = useRef(null);
@@ -42,7 +38,7 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   const postAPI = new PostAPI(app.token);
 
   const [currentRegion, setCurrentRegion] = useState<any>(null);
-  const [distance, setDistance] = useState<number>(5);
+  const [distanceState, setDistance] = useState<number>(5);
   const [dataOnMap, setDataOnMap] = useState<any[]>([]);
 
   const INITIAL_REGION = {
@@ -88,6 +84,7 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
           );
         },
         errorLoc => {
+          // eslint-disable-next-line no-console
           console.log('geolocation info error', errorLoc);
           setCurrentRegion(INITIAL_REGION);
 
@@ -103,9 +100,10 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
     };
 
     getCurrentLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const calculateDistance = (latitudeDelta, longitudeDelta) => {
+  const calculateDistance = (latitudeDelta: number, longitudeDelta: number) => {
     const screenDiagonal = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
     const distancePerPixel = geolib.getDistance(
       { latitude: 0, longitude: 0 },
@@ -128,7 +126,7 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
       const param = {
         centerLat: currentRegion.latitude,
         centerLong: currentRegion.longitude,
-        distance: distance,
+        distance: distanceState,
       };
       const res = await postAPI.getPostByCoordinate(param);
       setDataOnMap(res);
@@ -162,10 +160,8 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
     carouselOffset.setValue(0);
   }, [carouselOffset]);
 
-  console.log('CURRENT LOCATION: ', currentRegion);
-  console.log('MAP DISTANCE: ', distance);
-
-  const handleSelectLocation = location => {
+  const handleSelectLocation = (location: any) => {
+    // eslint-disable-next-line no-console
     console.log('GO TO SCREEN DONATION/REQUEST INFO', location);
     navigation.navigate('PostDetail', { ...location });
   };
@@ -223,13 +219,7 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
               <View key={index} style={carouselItemStyle.carouselItem}>
                 <Pressable
                   onPress={() => handleSelectLocation(location)}
-                  style={{
-                    backgroundColor: 'white',
-                    borderRadius: 10,
-                    width: '90%',
-                    height: 100,
-                    padding: 15,
-                  }}>
+                  style={card.postInfoCard}>
                   <Text style={[text.blackBodyHighlight]}>{donation.name}</Text>
                   <Text style={[text.blackBodyReg]}>
                     {donation.description}

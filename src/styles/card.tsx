@@ -52,4 +52,12 @@ export default StyleSheet.create({
   collapseCard: {
     height: 0,
   },
+
+  postInfoCard: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: '90%',
+    height: 100,
+    padding: 15,
+  },
 });
