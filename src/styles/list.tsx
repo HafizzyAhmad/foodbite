@@ -11,6 +11,15 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     ...color.borderGrey,
   },
+
+  horizontalLineActive: {
+    height: 2,
+    ...color.bgBrand,
+  },
+  horizontalLineInactive: {
+    height: 2,
+    ...color.bgBlack,
+  },
   profileMenu: {
     justifyContent: 'space-between',
     flexDirection: 'row',

@@ -43,6 +43,9 @@ function RemoveIcon() {
 function FullLove() {
   return <Ionicons name="heart" size={20} color={'red'} />;
 }
+function FullLoveLarge() {
+  return <Ionicons name="heart" size={40} color={'red'} />;
+}
 
 function HalfLove() {
   return <Ionicons name="heart-half" size={20} color={'red'} />;
@@ -50,6 +53,9 @@ function HalfLove() {
 
 function EmptyLove() {
   return <Ionicons name="heart-outline" size={20} color={'red'} />;
+}
+function EmptyLoveLarge() {
+  return <Ionicons name="heart-outline" size={40} color={'red'} />;
 }
 
 function CircleBackground({ children }: any) {
@@ -69,4 +75,6 @@ export {
   HalfLove,
   EmptyLove,
   CircleBackground,
+  FullLoveLarge,
+  EmptyLoveLarge,
 };

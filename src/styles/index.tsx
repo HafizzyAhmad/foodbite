@@ -9,3 +9,4 @@ export { default as modal } from './modal';
 export { default as picker } from './picker';
 export { default as signage } from './signage';
 export { default as text } from './text';
+export { default as form } from './form';
