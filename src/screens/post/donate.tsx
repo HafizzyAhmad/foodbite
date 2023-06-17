@@ -479,8 +479,6 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
             function onCheckValid(): void | undefined {
               if (key === 'Contact No') {
                 const result: boolean = Validator.mobilePhone(mobileNumber);
-                console.log('CHEK PHONE: ', result);
-
                 setIsValidPhone(result);
               }
               if (key === 'City') {

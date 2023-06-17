@@ -27,8 +27,13 @@ import {
   getPostByCoordinateSuccess,
 } from '../../stores/post';
 import PostAPI from '../../api/post';
+import {
+  HomeTabParamList,
+  HomeTabScreenProps,
+  RootStackParamList,
+} from '../../types/routes/main';
 
-const HomeMain = () => {
+const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   const mapRef = useRef(null);
   const { width, height } = Dimensions.get('window');
   const [globalState, dispatch] = useStore();
@@ -128,29 +133,15 @@ const HomeMain = () => {
       const res = await postAPI.getPostByCoordinate(param);
       setDataOnMap(res);
       dispatch(getPostByCoordinateSuccess());
-      console.log('CHHECK RES: ', res[0]);
     } catch (error) {
       Alert.alert('Oh uh!, Error to load location. Please try again');
       dispatch(getPostByCoordinateFailed());
     }
   }
 
-  const locations = [
-    {
-      name: 'Location A',
-      latitude: 3.1760404191846865,
-      longitude: 101.72078233752916,
-    },
-    {
-      name: 'Location B',
-      latitude: 3.164549576339871,
-      longitude: 101.71523119718769,
-    },
-  ];
-
   const [carouselOffset] = useState(new Animated.Value(0));
 
-  const handleMarkerPress = index => {
+  const handleMarkerPress = (index: number) => {
     Animated.timing(carouselOffset, {
       toValue: -index * width,
       duration: 300,
@@ -176,6 +167,7 @@ const HomeMain = () => {
 
   const handleSelectLocation = location => {
     console.log('GO TO SCREEN DONATION/REQUEST INFO', location);
+    navigation.navigate('PostDetail', { ...location });
   };
 
   return (
@@ -219,7 +211,7 @@ const HomeMain = () => {
             );
           })}
       </MapView>
-      {dataOnMap.length > 0 && (
+      {dataOnMap !== undefined && dataOnMap.length > 0 && (
         <Animated.View
           style={[
             styles.carouselContainer,
