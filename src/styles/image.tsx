@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native';
+import common from './common';
+import color from './color';
 
 export default StyleSheet.create({
   logo: {
@@ -46,5 +48,12 @@ export default StyleSheet.create({
     width: '100%',
     height: '40%',
     // height: '100%',
+  },
+  profileBackground: {
+    ...common.center,
+    ...color.bgLightestGrey,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });

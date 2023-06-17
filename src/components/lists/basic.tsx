@@ -1,13 +1,16 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
+import { common } from '../../styles';
 
-const Basic = () => {
+const BasicList = ({ param, value }: any) => {
   return (
-    <>
-      <Text>Title</Text>
-      <Text>Description</Text>
-    </>
+    <View style={[common.flexRowSpaceBetween, common.paddingTopSmall]}>
+      <Text>{param}</Text>
+      <Text>
+        {value === '0.00' || value === 0 || value === null ? 'FREE' : value}
+      </Text>
+    </View>
   );
 };
 
-export default Basic;
+export default BasicList;

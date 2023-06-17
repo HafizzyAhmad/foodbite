@@ -97,6 +97,9 @@ export default StyleSheet.create({
   paddingRightSmall: {
     paddingRight: 20,
   },
+  paddingTopSmall: {
+    paddingTop: 10,
+  },
   marginBottomLarge: {
     marginBottom: 30,
   },
