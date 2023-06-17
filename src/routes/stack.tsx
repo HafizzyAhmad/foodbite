@@ -6,6 +6,8 @@ import DonateForm from '../screens/post/donate';
 import RequestForm from '../screens/post/request';
 import Complete from '../screens/post/complete';
 import PostDetail from '../screens/post/detail';
+import PostProfileDetail from '../screens/profile/postprofiledetail';
+import SubmitRating from '../screens/post/rating';
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
@@ -23,6 +25,8 @@ const StackNavigator: React.FC = () => {
       <Screen name="RequestForm" component={RequestForm} />
       <Screen name="Complete" component={Complete} />
       <Screen name="PostDetail" component={PostDetail} />
+      <Screen name="SubmitRating" component={SubmitRating} />
+      <Screen name="PostProfileDetail" component={PostProfileDetail} />
     </Navigator>
   );
 };

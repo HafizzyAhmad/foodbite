@@ -86,7 +86,7 @@ const PostDetail = ({
   };
 
   const viewDetails = () => {
-    console.log('CHECK FOR OWNER');
+    navigation.navigate('SubmitRating');
   };
 
   const handleButton = () => {
@@ -154,7 +154,7 @@ const PostDetail = ({
                   <View style={common.flexRow}>{renderRating()}</View>
                 </View>
               </View>
-              <TextButton caption="View Details" onPress={viewDetails} />
+              <TextButton caption="View Feedback" onPress={viewDetails} />
             </View>
           </View>
         </View>
