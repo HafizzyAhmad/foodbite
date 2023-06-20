@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import common from './common';
-import color from './color';
+import color, { colors } from './color';
 
 export default StyleSheet.create({
   logo: {
@@ -30,6 +30,14 @@ export default StyleSheet.create({
   selectedThumbnail: {
     width: '100%',
     height: 200,
+  },
+  selectedImageRating: {
+    borderRadius: 8,
+    borderColor: colors.baseGrey,
+    borderWidth: 1,
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
   },
   premiseType: {
     width: 30,

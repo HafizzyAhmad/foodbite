@@ -24,6 +24,7 @@ export default StyleSheet.create({
   fontGreen: { color: colors.secondaryBrand },
   fontYellow: { color: colors.baseYellow },
   fontBrand: { color: colors.baseBrand },
+  fontRed: { color: colors.baseRed },
 
   bgBlack: { backgroundColor: colors.black },
   bgWhite: { backgroundColor: colors.white },

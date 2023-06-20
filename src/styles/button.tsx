@@ -29,6 +29,26 @@ export default StyleSheet.create({
     marginVertical: 20,
   },
 
+  primarySmall: {
+    ...color.bgBrand,
+    ...common.center,
+    ...common.centerVertically,
+    width: '50%',
+    height: 45,
+    borderRadius: 30,
+    marginVertical: 20,
+  },
+
+  primarySmallDisable: {
+    ...color.bgLighterGrey,
+    ...common.center,
+    ...common.centerVertically,
+    width: '50%',
+    height: 45,
+    borderRadius: 30,
+    marginVertical: 20,
+  },
+
   secondary: {
     ...color.borderBrand,
     ...common.flexCenter,
