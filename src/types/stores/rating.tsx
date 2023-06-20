@@ -29,6 +29,14 @@ export interface IPostRating {
   reviews: IUserRating[];
 }
 
+export interface ISubmitRating {
+  userId: string;
+  ratorUserId: string;
+  ratingValue: number;
+  image: string;
+  feedback: string;
+}
+
 export type RatingReducerAction = {
   type: RatingReducerActionType;
   payload?: any;

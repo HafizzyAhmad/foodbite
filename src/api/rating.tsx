@@ -1,5 +1,5 @@
 import HTTP from '../libs/http';
-import { IPostRating } from '../types/stores/rating';
+import { IPostRating, ISubmitRating } from '../types/stores/rating';
 
 class RatingAPI extends HTTP {
   /**
@@ -8,14 +8,20 @@ class RatingAPI extends HTTP {
    */
   async getRatingById(param: string) {
     // console.log('DATA: ', data);
-    const url = `v1/rating/ratings/userId=${param}`;
+    const url = `/v1/rating/ratings/userId=${param}`;
     const res = await this.get(url);
     return res;
   }
 
   async getRatingByPost(param: string) {
-    const url = `v1/rating/ratingsByPost/userId=${param}`;
+    const url = `/v1/rating/ratingsByPost/userId=${param}`;
     const res: IPostRating = await this.get(url);
+    return res;
+  }
+
+  async submitRating(data: ISubmitRating) {
+    const url = '/v1/rating/create';
+    const res: ISubmitRating = await this.post(url, data);
     return res;
   }
 }
