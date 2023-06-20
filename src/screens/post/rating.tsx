@@ -1,7 +1,8 @@
-import React, { Fragment, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../elements/layout';
 import ArrowHeader from '../../components/headers/arrowheader';
 import {
+  Alert,
   Image,
   ScrollView,
   Text,
@@ -15,25 +16,63 @@ import { EmptyLoveLarge, FullLoveLarge } from '../../components/icon';
 import ListReview from '../../components/lists/reviews';
 import { useStore } from '../../hooks';
 import { HandleImageUpload } from '../../libs/uploadimage';
-import PrimaryButton from '../../components/buttons/primary';
 import TextButton from '../../components/buttons/textbutton';
 import PrimarySmallButton from '../../components/buttons/primarysmall';
 import TextButtonDanger from '../../components/buttons/textbuttondanger';
 import BottomActionButton from '../../components/buttons/bottombutton';
-import { ISubmitRating } from '../../types/stores/rating';
+import { IPostRating, ISubmitRating } from '../../types/stores/rating';
+import {
+  addRating,
+  addRatingFailed,
+  addRatingSuccess,
+  getDonationRating,
+  getDonationRatingFailed,
+  getDonationRatingSuccess,
+} from '../../stores/rate';
+import RatingAPI from '../../api/rating';
+import EmptySection from '../../components/emptysection';
 
 const SubmitRating = ({
   navigation,
   route,
 }: StackTabScreenProps<'SubmitRating'> | any) => {
   const [globalState, dispatch] = useStore();
-  const { app } = globalState;
+  const { app, rate } = globalState;
   const { id } = route.params;
+
+  const rateAPI = new RatingAPI(app.token);
 
   const [rating, setRating] = useState<number>(0);
   const [feedback, setFeedback] = useState<string>('');
   const [imageName, setImageName] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<string>('');
+  const [reviews, setReviews] = useState<any>([]);
+  const [loadingReview, setLoadingReview] = useState<boolean>();
+
+  console.log('CHECK FOR REVIEWS: ', reviews);
+
+  useEffect(() => {
+    async function onGetReviews() {
+      setLoadingReview(true);
+      dispatch(getDonationRating());
+      try {
+        const res: IPostRating = await rateAPI.getRatingByPost(id);
+        if (res) {
+          dispatch(getDonationRatingSuccess());
+          setLoadingReview(false);
+          setReviews(res.reviews);
+        }
+      } catch (error) {
+        Alert.alert('Oh uh! We cannot retrieve all the reviews');
+        dispatch(getDonationRatingFailed());
+        setLoadingReview(false);
+      }
+    }
+
+    if (app.token) {
+      onGetReviews();
+    }
+  }, [app.token]);
 
   const handleRating = (value: React.SetStateAction<number>) => {
     setRating(value);
@@ -51,18 +90,34 @@ const SubmitRating = ({
         console.log('Error:', error);
       });
 
-  async function onSubmit(data: ISubmitRating) {}
+  async function onSubmit(data: ISubmitRating) {
+    dispatch(addRating());
+    try {
+      const res: ISubmitRating = await rateAPI.submitRating(data);
+      if (res) {
+        dispatch(addRatingSuccess());
+        Alert.alert('Success! Thank you for your feedbacks');
+        setRating(0);
+        setFeedback('');
+      }
+    } catch (error) {
+      dispatch(addRatingFailed());
+      Alert.alert('Oh uh! Something went wrong. Please try again later.');
+    }
+  }
 
   const handleSubmit = () => {
     const data = {
       userId: id,
       ratorUserId: app.profile._id,
+      raterUserName: app.profile.username,
       ratingValue: rating,
       image: selectedImage,
       feedback: feedback,
     };
+    // console.log('CHECK DATA: ', data);
 
-    console.log('CHECK DATA: ', data);
+    onSubmit(data);
   };
 
   return (
@@ -123,7 +178,11 @@ const SubmitRating = ({
           ]}>
           Reviews
         </Text>
-        <ListReview />
+        {reviews.length === 0 ? (
+          <EmptySection caption="This post do not have enough feedbacks" />
+        ) : (
+          <ListReview reviews={reviews} />
+        )}
       </ScrollView>
       <BottomActionButton
         content={'Submit Rating'}
