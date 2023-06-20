@@ -86,7 +86,7 @@ const PostDetail = ({
   };
 
   const viewDetails = () => {
-    navigation.navigate('SubmitRating');
+    navigation.navigate('SubmitRating', createdById);
   };
 
   const handleButton = () => {
