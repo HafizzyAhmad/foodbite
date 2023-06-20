@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { common, text } from '../../styles';
+import { Image, Text, View } from 'react-native';
+import { common, image, text } from '../../styles';
 import {
   CircleBackground,
   EmptyLove,
@@ -8,10 +8,11 @@ import {
   HalfLove,
   UserIcon,
 } from '../icon';
+import Formatter from '../../utils/formatter';
 
-const ListReview = () => {
-  const renderRating = () => {
-    const score = 2.4;
+const ListReview = ({ reviews }: any) => {
+  const renderRating = (score: number) => {
+    // const score = 2.4;
     const totalRating = 5;
     const fullRating = Math.floor(score);
     const hasHalfRating = score - fullRating >= 0.5;
@@ -30,9 +31,9 @@ const ListReview = () => {
     return love;
   };
 
-  return (
+  return reviews.map((item): any => (
     <View style={[common.paddingVerticalSmall, common.flexRowSpaceBetween]}>
-      <View style={[common.flexRow]}>
+      <View style={[common.flexRow]} key={item.updated_at}>
         <CircleBackground>
           <UserIcon />
         </CircleBackground>
@@ -42,13 +43,33 @@ const ListReview = () => {
               text.blackBodyHighlight,
               text.lineHeightL,
               common.paddingRightXSmall,
-            ]}>{`User Name`}</Text>
-          <Text style={[text.greyLabelText]}>{`Rating: 10`}</Text>
-          <View style={common.flexRow}>{renderRating()}</View>
+            ]}>
+            {item.raterUserName ? item.raterUserName : item.ratorUserId}
+          </Text>
+          {item.image !== '' && (
+            <Image source={{ uri: item.image }} style={image.imageRating} />
+          )}
+          <Text
+            style={[
+              text.blackBodyReg,
+              text.lineHeightL,
+              common.paddingRightXSmall,
+            ]}>
+            {item.feedback}
+          </Text>
+          <Text
+            style={[
+              text.greyLabelText,
+              text.lineHeightL,
+              common.paddingRightXSmall,
+            ]}>
+            {`Last updated on ${Formatter.dateTime(item.updated_at)}`}
+          </Text>
+          <View style={common.flexRow}>{renderRating(item.ratingValue)}</View>
         </View>
       </View>
     </View>
-  );
+  ));
 };
 
 export default ListReview;

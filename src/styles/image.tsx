@@ -39,6 +39,14 @@ export default StyleSheet.create({
     height: 100,
     resizeMode: 'cover',
   },
+  imageRating: {
+    borderRadius: 8,
+    borderColor: colors.baseGrey,
+    borderWidth: 1,
+    width: '100%',
+    height: 100,
+    resizeMode: 'cover',
+  },
   premiseType: {
     width: 30,
     height: 30,
