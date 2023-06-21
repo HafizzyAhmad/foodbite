@@ -9,8 +9,11 @@ import {
   UserIcon,
 } from '../icon';
 import Formatter from '../../utils/formatter';
+import EmptySection from '../emptysection';
 
 const ListReview = ({ reviews }: any) => {
+  console.log('CHECK REVIEW: ', reviews);
+
   const renderRating = (score: number) => {
     // const score = 2.4;
     const totalRating = 5;
@@ -31,45 +34,49 @@ const ListReview = ({ reviews }: any) => {
     return love;
   };
 
-  return reviews.map((item): any => (
-    <View style={[common.paddingVerticalSmall, common.flexRowSpaceBetween]}>
-      <View style={[common.flexRow]} key={item.updated_at}>
-        <CircleBackground>
-          <UserIcon />
-        </CircleBackground>
-        <View style={common.paddingHorizontalContainer}>
-          <Text
-            style={[
-              text.blackBodyHighlight,
-              text.lineHeightL,
-              common.paddingRightXSmall,
-            ]}>
-            {item.raterUserName ? item.raterUserName : item.ratorUserId}
-          </Text>
-          {item.image !== '' && (
-            <Image source={{ uri: item.image }} style={image.imageRating} />
-          )}
-          <Text
-            style={[
-              text.blackBodyReg,
-              text.lineHeightL,
-              common.paddingRightXSmall,
-            ]}>
-            {item.feedback}
-          </Text>
-          <Text
-            style={[
-              text.greyLabelText,
-              text.lineHeightL,
-              common.paddingRightXSmall,
-            ]}>
-            {`Last updated on ${Formatter.dateTime(item.updated_at)}`}
-          </Text>
-          <View style={common.flexRow}>{renderRating(item.ratingValue)}</View>
+  return reviews ? (
+    reviews.map((item): any => (
+      <View style={[common.paddingVerticalSmall, common.flexRowSpaceBetween]}>
+        <View style={[common.flexRow]} key={item.updated_at}>
+          <CircleBackground>
+            <UserIcon />
+          </CircleBackground>
+          <View style={common.paddingHorizontalContainer}>
+            <Text
+              style={[
+                text.blackBodyHighlight,
+                text.lineHeightL,
+                common.paddingRightXSmall,
+              ]}>
+              {item.raterUserName ? item.raterUserName : item.ratorUserId}
+            </Text>
+            {item.image !== '' && (
+              <Image source={{ uri: item.image }} style={image.imageRating} />
+            )}
+            <Text
+              style={[
+                text.blackBodyReg,
+                text.lineHeightL,
+                common.paddingRightXSmall,
+              ]}>
+              {item.feedback}
+            </Text>
+            <Text
+              style={[
+                text.greyLabelText,
+                text.lineHeightL,
+                common.paddingRightXSmall,
+              ]}>
+              {`Last updated on ${Formatter.dateTime(item.updated_at)}`}
+            </Text>
+            <View style={common.flexRow}>{renderRating(item.ratingValue)}</View>
+          </View>
         </View>
       </View>
-    </View>
-  ));
+    ))
+  ) : (
+    <EmptySection caption="You do not have enough feedbacks" />
+  );
 };
 
 export default ListReview;

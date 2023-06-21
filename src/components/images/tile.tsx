@@ -1,42 +1,40 @@
 import React from 'react';
-import { TouchableOpacity, View, Image, Text } from 'react-native';
+import { TouchableOpacity, View, Image } from 'react-native';
+import { card, common, image } from '../../styles';
+import ImageLabel from '../labels/image';
+import TitleDescription from '../cards/titledescription';
+import EmptySection from '../emptysection';
+import Formatter from '../../utils/formatter';
 
-const ImageTile = () => {
-  return (
-    <TouchableOpacity
-      // key={item.merchantId}
-      onPress={() => {
-        console.log('View Donation');
-      }}
-      style={{
-        height: 240,
-        width: '50%',
-        marginBottom: 5,
-        // paddingLeft: 5,
-      }}>
-      <View>
-        <Image
-          source={{
-            uri: 'https://unifi.com.my/sites/default/files/page/assets/images/myunifi/main-banner-1000x815/product-banner-UNI5G-1000x815.jpg',
+const ImageTile = ({ donation }: any) => {
+  return donation ? (
+    <View style={card.tileContainer}>
+      {donation.map(item => (
+        <TouchableOpacity
+          key={item._id}
+          onPress={() => {
+            console.log('View Donation');
           }}
-          style={{
-            width: '95%',
-            height: 120,
-            borderRadius: 8,
-            margin: 5,
-            marginBottom: 8,
-          }}
-        />
-        <View style={{ padding: 8 }}>
-          <Text numberOfLines={2}>{`Here is title`}</Text>
-          <View>
-            <Text numberOfLines={3} style={{ paddingTop: 5 }}>
-              {'Here the description'}
-            </Text>
+          style={card.tileCard}>
+          <View style={common.contentCenter}>
+            <Image
+              source={{
+                uri: item?.image,
+              }}
+              style={image.tile}
+            />
+            <ImageLabel type={item.type} />
           </View>
-        </View>
-      </View>
-    </TouchableOpacity>
+          <TitleDescription
+            title={item.donation?.name}
+            description={item.donation?.description}
+            createdDate={Formatter.dateTime(item.updated_at)}
+          />
+        </TouchableOpacity>
+      ))}
+    </View>
+  ) : (
+    <EmptySection caption="You do not have any post yet" />
   );
 };
 
