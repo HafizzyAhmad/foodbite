@@ -72,4 +72,11 @@ export default StyleSheet.create({
     height: 40,
     borderRadius: 20,
   },
+  tile: {
+    width: '95%',
+    height: 130,
+    borderRadius: 8,
+    margin: 5,
+    marginBottom: 8,
+  },
 });

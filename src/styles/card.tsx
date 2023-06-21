@@ -60,4 +60,17 @@ export default StyleSheet.create({
     height: 100,
     padding: 15,
   },
+  tileCard: {
+    height: 280,
+    width: '50%',
+    marginBottom: 5,
+  },
+  tileContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingTop: 15,
+    // paddingHorizontal: 10,
+    paddingBottom: 15,
+  },
 });

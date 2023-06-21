@@ -15,6 +15,9 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  contentCenter: {
+    alignContent: 'center',
+  },
   centerVertically: {
     alignItems: 'center',
   },
