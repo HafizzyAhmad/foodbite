@@ -20,6 +20,7 @@ const ProfileMain = ({
   const [globalState, dispatch] = useStore();
   const [foodDonation, setFoodDonation] = useState<any>([]);
   const [reviews, setReviews] = useState<any>([]);
+  const [score, setScore] = useState<number>(0);
   const { app } = globalState;
 
   useEffect(() => {
@@ -28,8 +29,11 @@ const ProfileMain = ({
       try {
         const res: IRating = await rateAPI.getRatingById(app.profile._id);
         if (res) {
+          console.log('CHECK FOOD DONMATION: ', res.foodDonation);
+
           setFoodDonation(res.foodDonation);
           setReviews(res.reviews);
+          setScore(res.ratingScore);
         }
       } catch (error) {
         Alert.alert('Oh uh! Some of the information could not loaded');
@@ -51,14 +55,15 @@ const ProfileMain = ({
     },
   ];
   const determineTab = () => {
-    if (isActive === 'Posts') return <ImageTile donation={foodDonation} />;
+    if (isActive === 'Posts')
+      return <ImageTile donation={foodDonation} nav={navigation} />;
     if (isActive === 'Reviews') return <ListReview reviews={reviews} />;
   };
 
   return (
     <Layout custom={[common.basicLayout]}>
       <ScrollView>
-        <ProfileHeader />
+        <ProfileHeader profile={app.profile} score={score} />
         {/* <ProfileSection /> */}
         <View style={[common.flexRow]}>
           {tab.map(item =>

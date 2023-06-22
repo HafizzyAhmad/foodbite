@@ -6,14 +6,14 @@ import TitleDescription from '../cards/titledescription';
 import EmptySection from '../emptysection';
 import Formatter from '../../utils/formatter';
 
-const ImageTile = ({ donation }: any) => {
+const ImageTile = ({ donation, nav }: any) => {
   return donation ? (
     <View style={[card.tileContainer, common.paddingContainer]}>
       {donation.map(item => (
         <TouchableOpacity
           key={item._id}
           onPress={() => {
-            console.log('View Donation');
+            nav.navigate('PostDetail', item);
           }}
           style={card.tileCard}>
           <View style={common.contentCenter}>

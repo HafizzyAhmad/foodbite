@@ -4,14 +4,14 @@ import { color, common, header, image } from '../../styles';
 import ProfileSection from '../profile';
 import IMAGE from '../../constants/image';
 
-function ProfileHeader(params: type) {
+function ProfileHeader({ profile, score }: any) {
   // const image = { uri: IMAGE.profileBackground };
   return (
     <ImageBackground
       source={IMAGE.profileBackground}
       style={[image.profileHeader, common.center]}
       resizeMode="cover">
-      <ProfileSection />
+      <ProfileSection profile={profile} score={score} />
     </ImageBackground>
   );
 }

@@ -9,10 +9,8 @@ import {
   UserIconLarge,
 } from './icon';
 
-const ProfileSection = () => {
-  const rating = 2.6;
+const ProfileSection = ({ profile, score }: any) => {
   const renderRating = () => {
-    const score = rating;
     const totalRating = 5;
     const fullRating = Math.floor(score);
     const hasHalfRating = score - fullRating >= 0.5;
@@ -42,13 +40,15 @@ const ProfileSection = () => {
             text.blackScreenBrand,
             common.paddingVerticalSmall,
             text.alignSelfCenter,
-          ]}>{`User name`}</Text>
-        <Text style={[text.alignSelfCenter]}>hafizzy01@yopmail.com</Text>
+          ]}>
+          {profile?.username}
+        </Text>
+        <Text style={[text.alignSelfCenter]}>{profile?.email}</Text>
         <Text
           style={[
             text.greyLabelText,
             text.alignSelfCenter,
-          ]}>{`Rating: 2.43`}</Text>
+          ]}>{`Rating: ${score.toFixed(2)}`}</Text>
         <View style={[common.flexRow, common.center]}>{renderRating()}</View>
       </View>
     </View>
