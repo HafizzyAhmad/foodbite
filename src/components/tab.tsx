@@ -9,7 +9,9 @@ type TabProps = {
 
 const TabActive = ({ caption, action }: TabProps) => (
   <View style={[common.widthHalf]}>
-    <Pressable onPress={action} style={[common.center, common.paddingBottomS]}>
+    <Pressable
+      onPress={action}
+      style={[common.center, common.paddingVerticalMedium]}>
       <Text style={[text.brandButton]}>{caption}</Text>
     </Pressable>
     <View style={list.horizontalLineActive} />
@@ -18,7 +20,9 @@ const TabActive = ({ caption, action }: TabProps) => (
 
 const TabInActive = ({ caption, action }: TabProps) => (
   <View style={[common.widthHalf]}>
-    <Pressable onPress={action} style={[common.center, common.paddingBottomS]}>
+    <Pressable
+      onPress={action}
+      style={[common.center, common.paddingVerticalMedium]}>
       <Text style={[text.blackBodyReg]}>{caption}</Text>
     </Pressable>
     <View style={[list.horizontalLineInactive]} />

@@ -72,11 +72,24 @@ export default StyleSheet.create({
     height: 40,
     borderRadius: 20,
   },
+
+  profileBackgroundLarge: {
+    ...common.center,
+    ...color.bgLightestGrey,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
   tile: {
     width: '95%',
     height: 130,
     borderRadius: 8,
     margin: 5,
     marginBottom: 8,
+  },
+
+  profileHeader: {
+    width: '100%',
+    height: 250,
   },
 });

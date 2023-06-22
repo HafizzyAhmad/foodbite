@@ -8,7 +8,7 @@ import Formatter from '../../utils/formatter';
 
 const ImageTile = ({ donation }: any) => {
   return donation ? (
-    <View style={card.tileContainer}>
+    <View style={[card.tileContainer, common.paddingContainer]}>
       {donation.map(item => (
         <TouchableOpacity
           key={item._id}

@@ -11,6 +11,7 @@ import ListReview from '../../components/lists/reviews';
 import RatingAPI from '../../api/rating';
 import { useStore } from '../../hooks';
 import { IPostRating, IRating } from '../../types/stores/rating';
+import ProfileHeader from '../../components/headers/profileheader';
 
 const ProfileMain = ({
   navigation,
@@ -56,22 +57,20 @@ const ProfileMain = ({
 
   return (
     <Layout custom={[common.basicLayout]}>
-      <ArrowHeader
-        nav={navigation}
-        title="Donation Profile"
-        disableBack={false}
-      />
-      <ScrollView style={[common.paddingHorizontalContainer]}>
-        <ProfileSection />
-        <View style={common.flexRow}>
+      <ScrollView>
+        <ProfileHeader />
+        {/* <ProfileSection /> */}
+        <View style={[common.flexRow]}>
           {tab.map(item =>
             isActive === item.name ? (
               <TabActive
+                key={item.id}
                 caption={item.name}
                 action={() => setIsActive(item.name)}
               />
             ) : (
               <TabInActive
+                key={item.id}
                 caption={item.name}
                 action={() => setIsActive(item.name)}
               />

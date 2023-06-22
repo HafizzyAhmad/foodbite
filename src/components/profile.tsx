@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { common, text } from '../styles';
 import {
-  CircleBackground,
+  CircleBackgroundLarge,
   EmptyLove,
   FullLove,
   HalfLove,
-  UserIcon,
+  UserIconLarge,
 } from './icon';
 
 const ProfileSection = () => {
@@ -32,25 +32,24 @@ const ProfileSection = () => {
   };
 
   return (
-    <View style={[common.paddingVerticalSmall, common.flexRowSpaceBetween]}>
-      <View style={[common.flexRow]}>
-        <CircleBackground>
-          <UserIcon />
-        </CircleBackground>
-        <View style={common.paddingHorizontalContainer}>
-          <Text
-            style={[
-              text.blackBodyHighlight,
-              text.lineHeightL,
-              common.paddingRightXSmall,
-            ]}>{`User name`}</Text>
-          <Text>hafizzy01@yopmail.com</Text>
-          <Text style={[text.greyLabelText]}>{`Rating: 2.43`}</Text>
-          <View style={common.flexRow}>
-            <Text>{`Test`}</Text>
-          </View>
-          <View style={common.flexRow}>{renderRating()}</View>
-        </View>
+    <View style={[common.center]}>
+      <CircleBackgroundLarge>
+        <UserIconLarge />
+      </CircleBackgroundLarge>
+      <View style={common.paddingHorizontalContainer}>
+        <Text
+          style={[
+            text.blackScreenBrand,
+            common.paddingVerticalSmall,
+            text.alignSelfCenter,
+          ]}>{`User name`}</Text>
+        <Text style={[text.alignSelfCenter]}>hafizzy01@yopmail.com</Text>
+        <Text
+          style={[
+            text.greyLabelText,
+            text.alignSelfCenter,
+          ]}>{`Rating: 2.43`}</Text>
+        <View style={[common.flexRow, common.center]}>{renderRating()}</View>
       </View>
     </View>
   );

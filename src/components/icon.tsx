@@ -32,6 +32,10 @@ function UserIcon() {
   return <Feather name="user" size={25} color={'grey'} />;
 }
 
+function UserIconLarge() {
+  return <Feather name="user" size={35} color={'grey'} />;
+}
+
 function AddIcon() {
   return <Feather name="plus-circle" size={25} color="#20DD20" />;
 }
@@ -62,6 +66,10 @@ function CircleBackground({ children }: any) {
   return <View style={image.profileBackground}>{children}</View>;
 }
 
+function CircleBackgroundLarge({ children }: any) {
+  return <View style={image.profileBackgroundLarge}>{children}</View>;
+}
+
 export {
   ArrowLeft,
   IconHeaderRight,
@@ -71,10 +79,12 @@ export {
   AddIcon,
   RemoveIcon,
   UserIcon,
+  UserIconLarge,
   FullLove,
   HalfLove,
   EmptyLove,
   CircleBackground,
   FullLoveLarge,
   EmptyLoveLarge,
+  CircleBackgroundLarge,
 };

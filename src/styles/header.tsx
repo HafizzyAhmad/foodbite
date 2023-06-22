@@ -19,4 +19,9 @@ export default StyleSheet.create({
     paddingVertical: 10,
     justifyContent: 'center',
   },
+
+  profileHeader: {
+    width: '100%',
+    height: 300,
+  },
 });

@@ -36,7 +36,7 @@ const ListReview = ({ reviews }: any) => {
 
   return reviews ? (
     reviews.map((item): any => (
-      <View style={[common.paddingVerticalSmall, common.flexRowSpaceBetween]}>
+      <View style={[common.paddingContainer, common.flexRowSpaceBetween]}>
         <View style={[common.flexRow]} key={item.updated_at}>
           <CircleBackground>
             <UserIcon />
