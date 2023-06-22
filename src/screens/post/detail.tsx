@@ -37,7 +37,9 @@ const PostDetail = ({
     items,
     geoLocation,
     createdById,
+    createdByUserName,
   } = route.params;
+
   const bannerImage = route.params?.image;
   const [globalState, dispatch] = useStore();
   const [rating, setRating] = useState<any>(null);
@@ -51,7 +53,7 @@ const PostDetail = ({
     async function viewPostedDetail() {
       try {
         const res: IPostRating = await ratingAPI.getRatingByPost(
-          createdById.id,
+          createdById.id ? createdById.id : createdById,
         );
         if (res) {
           setRating(res);
@@ -146,7 +148,13 @@ const PostDetail = ({
                       text.blackBodyHighlight,
                       text.lineHeightL,
                       common.paddingRightXSmall,
-                    ]}>{`${createdById.username}`}</Text>
+                    ]}>{`${
+                    createdByUserName
+                      ? createdByUserName
+                      : createdById.username
+                      ? createdById.username
+                      : createdById
+                  }`}</Text>
                   <Text
                     style={[
                       text.greyLabelText,

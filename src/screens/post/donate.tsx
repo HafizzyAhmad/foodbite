@@ -295,6 +295,7 @@ const DonateForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
       image: selectedImage,
       type: 'Donation',
       createdById: app.profile._id,
+      createdByUserName: app.profile.username,
       donation: {
         name: donationName,
         description: description,
