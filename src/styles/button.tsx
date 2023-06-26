@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import color from './color';
 import common from './common';
+import text from './text';
 
 const WITH_SHADOW = {
   shadowColor: color.bgBlack.backgroundColor,
@@ -135,5 +136,18 @@ export default StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     borderRadius: 20,
+  },
+  buttonWhiteSmall: {
+    ...color.bgWhite,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+    backgroundColor: 'white',
+    marginVertical: 5,
+  },
+  footerWithoutBorder: {
+    ...text.redBodyReg,
+    ...text.center,
+    ...common.basicContainerNoFlex,
   },
 });
