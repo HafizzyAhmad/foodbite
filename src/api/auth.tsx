@@ -1,5 +1,5 @@
 import HTTP from '../libs/http';
-import { IAuthLoginRequest } from '../types/stores/app';
+import { IAuthLoginRequest, IUserUpdateProfile } from '../types/stores/app';
 
 class AuthAPI extends HTTP {
   /**
@@ -11,6 +11,15 @@ class AuthAPI extends HTTP {
 
     const url = '/v1/user/login';
     const res = await this.post(url, data);
+    return res;
+  }
+
+  /**
+   * use this method to update user info
+   */
+  async updateProfile(data: IUserUpdateProfile, id: string) {
+    const url = `/v1/user/profile/${id}`;
+    const res = await this.put(url, data);
     return res;
   }
 }

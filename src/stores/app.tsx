@@ -32,6 +32,10 @@ export const authenticateSuccess = (profile: any) => {
   return { type: ReducerActionType.AUTHENTICATION_SUCCESS, payload: profile };
 };
 
+export const updateProfileSuccess = (profile: any) => {
+  return { type: ReducerActionType.UPDATE_PROFILE_SUCCESS, payload: profile };
+};
+
 export const logout = () => {
   return { type: ReducerActionType.LOGOUT };
 };
@@ -69,6 +73,14 @@ export const appReducer: Reducer<IAllStateStores, AppReducerAction> = (
           isAuthenticated: true,
           token: payload.token,
           profile: payload.user,
+        },
+      };
+    case ReducerActionType.UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        app: {
+          ...state.app,
+          profile: payload,
         },
       };
     case ReducerActionType.LOGOUT:
