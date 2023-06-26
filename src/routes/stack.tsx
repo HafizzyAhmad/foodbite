@@ -8,6 +8,7 @@ import Complete from '../screens/post/complete';
 import PostDetail from '../screens/post/detail';
 import PostProfileDetail from '../screens/profile/postprofiledetail';
 import SubmitRating from '../screens/post/rating';
+import Setting from '../screens/profile/setting';
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
@@ -27,6 +28,7 @@ const StackNavigator: React.FC = () => {
       <Screen name="PostDetail" component={PostDetail} />
       <Screen name="SubmitRating" component={SubmitRating} />
       <Screen name="PostProfileDetail" component={PostProfileDetail} />
+      <Screen name="Setting" component={Setting} />
     </Navigator>
   );
 };

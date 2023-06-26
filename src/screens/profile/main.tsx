@@ -42,7 +42,7 @@ const ProfileMain = ({
     if (app.token) {
       getRatingProfile();
     }
-  }, [app.profile._id, app.token]);
+  }, [app.profile?._id, app.token]);
 
   const tab = [
     {
@@ -63,7 +63,7 @@ const ProfileMain = ({
   return (
     <Layout custom={[common.basicLayout]}>
       <ScrollView>
-        <ProfileHeader profile={app.profile} score={score} />
+        <ProfileHeader profile={app.profile} score={score} nav={navigation} />
         {/* <ProfileSection /> */}
         <View style={[common.flexRow]}>
           {tab.map(item =>

@@ -68,7 +68,7 @@ export default StyleSheet.create({
   lineHeightM: { lineHeight: 21 },
   lineHeightS: { lineHeight: 18 },
 
-  redBodyReg: { ...body, ...color.fontBrand },
+  redBodyReg: { ...body, ...color.fontRed },
   greenBodyReg: { ...body, ...color.fontGreen },
 
   redErrorText: { ...caption, ...color.fontBrand },

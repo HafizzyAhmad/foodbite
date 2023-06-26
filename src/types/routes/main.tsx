@@ -32,6 +32,7 @@ export type RootStackParamList = {
   PostDetail: any;
   SubmitRating: any;
   PostProfileDetail: any;
+  Setting: any;
 };
 
 /**
