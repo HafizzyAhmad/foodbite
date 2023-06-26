@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import URL from '../constants/url';
+import { ReducerActionType } from '../types/stores/app';
+import store from '../utils/store';
 
 class HTTP {
   token: string | null;
   instance: AxiosInstance = axios.create({
     baseURL: URL.API,
-    timeout: 2000,
+    timeout: 10000,
     headers: {
       'Content-type': 'application/json',
     },
@@ -73,9 +75,12 @@ class HTTP {
       error,
     );
 
+    if (error.message.includes('400')) {
+      return alert('Opps, information not found');
+    }
+
     if (error.message.includes('401')) {
-      console.log('KENAPA LOGOUT: ', error.message);
-      // return store.dispatch({ type: ReducerActionType.LOGOUT });
+      return store.dispatch({ type: ReducerActionType.LOGOUT });
     }
 
     if (error.message.includes('404')) {
@@ -120,6 +125,26 @@ class HTTP {
         method: 'POST',
         url: endpoint,
         data,
+      });
+      return this.handleSuccessResponse(response);
+    } catch (error) {
+      return this.handleFailResponse(error);
+    }
+  }
+
+  /**
+   * use this method to perform POST request
+   * @param     endpoint      string      endpoint set up the backend team
+   * @param     data          any         params based on the api specs // TODO implement generics
+   * @returns Promise<any>
+   */
+  async put(endpoint: string, data: any, params?: any) {
+    try {
+      const response = await this.instance.request({
+        method: 'PUT',
+        url: endpoint,
+        data,
+        params,
       });
       return this.handleSuccessResponse(response);
     } catch (error) {
