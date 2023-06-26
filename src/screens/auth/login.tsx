@@ -22,8 +22,9 @@ import form from '../../styles/form';
 import { useOffset } from '../../hooks/use-offset';
 import PrimaryButton from '../../components/buttons/primary';
 import IMAGE from '../../constants/image';
+import { StackTabScreenProps } from '../../types/routes/main';
 
-const LoginMain: React.FC = () => {
+const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
   const [globalState, dispatch] = useStore();
   const [isLogging, setIsLogging] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -83,6 +84,7 @@ const LoginMain: React.FC = () => {
 
   const onRegister = () => {
     console.log('Go to Screen Register');
+    navigation.navigate('RegisterProfile');
   };
 
   const loginConfig: IInputForm[] = [
