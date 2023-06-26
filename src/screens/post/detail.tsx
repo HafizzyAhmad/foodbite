@@ -65,7 +65,7 @@ const PostDetail = ({
     if (app.token) {
       viewPostedDetail();
     }
-  }, [app.token, createdById.id]);
+  }, [app.token, createdById, createdById.id]);
 
   const renderRating = () => {
     const score = rating?.ratingScore;
@@ -88,7 +88,9 @@ const PostDetail = ({
   };
 
   const viewDetails = () => {
-    navigation.navigate('SubmitRating', createdById);
+    navigation.navigate('SubmitRating', {
+      id: createdById.id ? createdById.id : createdById,
+    });
   };
 
   const handleButton = () => {

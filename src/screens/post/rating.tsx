@@ -37,10 +37,8 @@ const SubmitRating = ({
   route,
 }: StackTabScreenProps<'SubmitRating'> | any) => {
   const [globalState, dispatch] = useStore();
-  const { app, rate } = globalState;
+  const { app } = globalState;
   const { id } = route.params;
-
-  const rateAPI = new RatingAPI(app.token);
 
   const [rating, setRating] = useState<number>(0);
   const [feedback, setFeedback] = useState<string>('');
@@ -49,10 +47,9 @@ const SubmitRating = ({
   const [reviews, setReviews] = useState<any>([]);
   const [loadingReview, setLoadingReview] = useState<boolean>();
 
-  console.log('CHECK FOR REVIEWS: ', reviews);
-
   useEffect(() => {
     async function onGetReviews() {
+      const rateAPI = new RatingAPI(app.token);
       setLoadingReview(true);
       dispatch(getDonationRating());
       try {
@@ -72,7 +69,7 @@ const SubmitRating = ({
     if (app.token) {
       onGetReviews();
     }
-  }, [app.token]);
+  }, [app.token, dispatch, id]);
 
   const handleRating = (value: React.SetStateAction<number>) => {
     setRating(value);
