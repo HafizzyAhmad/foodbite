@@ -22,6 +22,16 @@ class AuthAPI extends HTTP {
     const res = await this.put(url, data);
     return res;
   }
+
+  /**
+   * use this method to register user info
+   * @
+   */
+  async register(data: IAuthLoginRequest) {
+    const url = '/v1/user/register';
+    const res = await this.post(url, data);
+    return res;
+  }
 }
 
 export default AuthAPI;
