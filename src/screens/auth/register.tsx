@@ -10,25 +10,21 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { button, common, form, text } from '../../styles';
-import { useStore } from '../../hooks';
+import { common, form, text } from '../../styles';
 import { useOffset } from '../../hooks/use-offset';
 import BottomActionButton from '../../components/buttons/bottombutton';
 import Validator from '../../utils/validator';
-import { logout, updateProfileSuccess } from '../../stores/app';
 import AuthAPI from '../../api/auth';
 
 const RegisterProfile = ({ navigation }: any) => {
-  const [globalState, dispatch] = useStore();
   const { heightOffset, onIncrementFocus } = useOffset();
-  const { profile, token } = globalState.app;
 
   const [username, setUsername] = useState<string>('');
   const [emailAddress, setEmailAddress] = useState<string>('');
   const [password, setPassword] = useState<string>('●●●●●●●●●●●●');
   const [isDisabledSubmit, setDisabledSubmit] = useState<boolean>(true);
 
-  const profileAPI = new AuthAPI(token);
+  const profileAPI = new AuthAPI(null);
 
   /**
    * use this to check input value for every form input
@@ -58,25 +54,24 @@ const RegisterProfile = ({ navigation }: any) => {
     checkInput();
   }, [username, emailAddress, password]);
 
-  const updateProfile = async () => {
-    const param = {
+  const register = async () => {
+    const data = {
       username: username,
-      email: emailAddress,
+      email: emailAddress.toLowerCase(),
       password: password,
       role: 'user',
       profile: {},
     };
 
     try {
-      const res = await profileAPI.updateProfile(param, profile._id);
+      const res = await profileAPI.register(data);
       if (res) {
-        dispatch(updateProfileSuccess(res));
-        Alert.alert('Success', 'Your information has been updated', [
-          { text: 'Okay', onPress: () => navigation.goBack() },
+        Alert.alert('Success', 'Your registration has been completed', [
+          { text: 'Bring me to Login', onPress: () => navigation.goBack() },
         ]);
       }
     } catch (error) {
-      Alert.alert('Oh uh! Something went wrong');
+      Alert.alert('Oh uh! Something went wrong', error as string);
     }
   };
 
@@ -184,8 +179,8 @@ const RegisterProfile = ({ navigation }: any) => {
         </KeyboardAvoidingView>
       </ScrollView>
       <BottomActionButton
-        content={'Update Profile'}
-        onPress={updateProfile}
+        content={'Register Now'}
+        onPress={register}
         isInactive={!isDisabledSubmit}
       />
     </Layout>
