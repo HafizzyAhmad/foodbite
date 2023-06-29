@@ -44,11 +44,9 @@ const ProfileSection = ({ profile, score }: any) => {
           {profile?.username}
         </Text>
         <Text style={[text.alignSelfCenter]}>{profile?.email}</Text>
-        <Text
-          style={[
-            text.greyLabelText,
-            text.alignSelfCenter,
-          ]}>{`Rating: ${score.toFixed(2)}`}</Text>
+        <Text style={[text.greyLabelText, text.alignSelfCenter]}>{`Rating: ${
+          score === null ? 'Not enough rating to display' : score.toFixed(2)
+        }`}</Text>
         <View style={[common.flexRow, common.center]}>{renderRating()}</View>
       </View>
     </View>

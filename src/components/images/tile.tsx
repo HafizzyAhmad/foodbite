@@ -9,29 +9,37 @@ import Formatter from '../../utils/formatter';
 const ImageTile = ({ donation, nav }: any) => {
   return donation ? (
     <View style={[card.tileContainer, common.paddingContainer]}>
-      {donation.map(item => (
-        <TouchableOpacity
-          key={item._id}
-          onPress={() => {
-            nav.navigate('PostDetail', item);
-          }}
-          style={card.tileCard}>
-          <View style={common.contentCenter}>
-            <Image
-              source={{
-                uri: item?.image,
-              }}
-              style={image.tile}
+      {donation.map(
+        (item: {
+          _id: React.Key | null | undefined;
+          image: any;
+          type: any;
+          donation: { name: any; description: any };
+          updated_at: string;
+        }) => (
+          <TouchableOpacity
+            key={item._id}
+            onPress={() => {
+              nav.navigate('PostDetail', item);
+            }}
+            style={card.tileCard}>
+            <View style={common.contentCenter}>
+              <Image
+                source={{
+                  uri: item?.image,
+                }}
+                style={image.tile}
+              />
+              <ImageLabel type={item.type} />
+            </View>
+            <TitleDescription
+              title={item.donation?.name}
+              description={item.donation?.description}
+              createdDate={Formatter.dateTime(item.updated_at)}
             />
-            <ImageLabel type={item.type} />
-          </View>
-          <TitleDescription
-            title={item.donation?.name}
-            description={item.donation?.description}
-            createdDate={Formatter.dateTime(item.updated_at)}
-          />
-        </TouchableOpacity>
-      ))}
+          </TouchableOpacity>
+        ),
+      )}
     </View>
   ) : (
     <EmptySection caption="You do not have any post yet" />
