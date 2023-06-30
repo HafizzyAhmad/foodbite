@@ -10,6 +10,7 @@ import PostProfileDetail from '../screens/profile/postprofiledetail';
 import SubmitRating from '../screens/post/rating';
 import Setting from '../screens/profile/setting';
 import RegisterProfile from '../screens/auth/register';
+import Recommended from '../screens/home/recommended';
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,6 +32,7 @@ const StackNavigator: React.FC = () => {
       <Screen name="PostProfileDetail" component={PostProfileDetail} />
       <Screen name="Setting" component={Setting} />
       <Screen name="RegisterProfile" component={RegisterProfile} />
+      <Screen name="Recommended" component={Recommended} />
     </Navigator>
   );
 };
