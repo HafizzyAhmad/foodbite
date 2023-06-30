@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../elements/layout';
-import { color, common, image, text } from '../../styles';
+import { common, image, signage, text } from '../../styles';
 import ArrowHeader from '../../components/headers/arrowheader';
 import { Alert, Image, ScrollView, Text, View } from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import BottomActionButton from '../../components/buttons/bottombutton';
 import Formatter from '../../utils/formatter';
-import Basic from '../../components/lists/basic';
 import BasicList from '../../components/lists/basic';
 import { IFoodItem } from '../../types/stores/donate';
 import {
@@ -18,7 +17,7 @@ import {
 } from '../../components/icon';
 import RatingAPI from '../../api/rating';
 import { useStore } from '../../hooks';
-import { IPostRating, IRating } from '../../types/stores/rating';
+import { IPostRating } from '../../types/stores/rating';
 import TextButton from '../../components/buttons/textbutton';
 
 const PostDetail = ({
@@ -27,7 +26,6 @@ const PostDetail = ({
 }: StackTabScreenProps<'PostDetail'> | any) => {
   const {
     donation,
-    type,
     address,
     postcode,
     city,
@@ -41,7 +39,7 @@ const PostDetail = ({
   } = route.params;
 
   const bannerImage = route.params?.image;
-  const [globalState, dispatch] = useStore();
+  const [globalState] = useStore();
   const [rating, setRating] = useState<any>(null);
 
   const { latitude, longitude } = geoLocation;
@@ -97,6 +95,8 @@ const PostDetail = ({
     console.log('SHOW ME THE WAY', latitude, longitude);
   };
 
+  const today = new Date().toISOString();
+
   return (
     <Layout custom={[common.basicLayout]}>
       <ArrowHeader nav={navigation} title={donation.name} disableBack={false} />
@@ -125,11 +125,25 @@ const PostDetail = ({
                 text.lineHeightL,
               ]}>{`${mobileNumber}`}</Text>
           </View>
+          <View style={signage.postStatus}>
+            {startDateTime > today && endDateTime > today ? (
+              <Text style={[text.yellowLabelText]}>Upcoming</Text>
+            ) : startDateTime < today && endDateTime > today ? (
+              <Text style={[text.greenLabelText]}>Ongoing</Text>
+            ) : (
+              startDateTime < today &&
+              endDateTime < today && (
+                <Text style={text.redLabelText}>Expired</Text>
+              )
+            )}
+          </View>
           <Text
             style={[
               text.blackBodyReg,
               text.lineHeightL,
-            ]}>{`Available from ${startDateTime} to ${endDateTime}`}</Text>
+            ]}>{`Available from ${Formatter.dateTime(
+            startDateTime,
+          )} to ${Formatter.dateTime(endDateTime)}`}</Text>
           <View style={common.paddingVerticalMedium}>
             <Text style={text.greyBodyReg}>DONATION ITEM</Text>
             {items.map((item: IFoodItem) => (
