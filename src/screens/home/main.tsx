@@ -2,23 +2,18 @@
 // https://aboutreact.com/react-native-map-example/
 // Import React
 import React, { useEffect, useRef, useState } from 'react';
-// Import required components
 import {
   Animated,
   Dimensions,
-  StyleSheet,
-  Text,
   View,
   PermissionsAndroid,
   Platform,
-  Pressable,
   Alert,
+  Image,
 } from 'react-native';
-// Import Map and Marker
 import MapView, { Circle, Marker } from 'react-native-maps';
-import { card, text } from '../../styles';
+import { common, image } from '../../styles';
 import Geolocation from '@react-native-community/geolocation';
-import Feather from 'react-native-vector-icons/Feather';
 import * as geolib from 'geolib';
 import { useStore } from '../../hooks';
 import {
@@ -28,6 +23,8 @@ import {
 } from '../../stores/post';
 import PostAPI from '../../api/post';
 import { HomeTabScreenProps } from '../../types/routes/main';
+import MapCard from '../../components/cards/map';
+import IMAGE from '../../constants/image';
 
 const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   const mapRef = useRef(null);
@@ -40,6 +37,9 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   const [currentRegion, setCurrentRegion] = useState<any>(null);
   const [distanceState, setDistance] = useState<number>(5);
   const [dataOnMap, setDataOnMap] = useState<any[]>([]);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
   const INITIAL_REGION = {
     latitude: 3.1161,
@@ -122,6 +122,8 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
 
   async function dragMapEnds() {
     dispatch(getPostByCoordinate());
+    setIsLoading(true);
+
     try {
       const param = {
         centerLat: currentRegion.latitude,
@@ -129,11 +131,15 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
         distance: distanceState,
       };
       const res = await postAPI.getPostByCoordinate(param);
-      setDataOnMap(res);
-      dispatch(getPostByCoordinateSuccess());
+      if (res) {
+        setDataOnMap(res);
+        dispatch(getPostByCoordinateSuccess());
+        setIsLoading(false);
+      }
     } catch (error) {
       Alert.alert('Oh uh!, Error to load location. Please try again');
       dispatch(getPostByCoordinateFailed());
+      setIsLoading(false);
     }
   }
 
@@ -145,16 +151,8 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
       duration: 300,
       useNativeDriver: true,
     }).start();
+    setSelectedIndex(index);
   };
-
-  const carouselItemStyle = StyleSheet.create({
-    carouselItem: {
-      width: width, // Pass the width dynamically
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 10,
-    },
-  });
 
   useEffect(() => {
     carouselOffset.setValue(0);
@@ -167,10 +165,10 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={common.flex1}>
       <MapView
         ref={mapRef}
-        style={styles.map}
+        style={common.flexCenter}
         // onRegionChange={handleRegionChange}
         initialRegion={INITIAL_REGION}
         region={currentRegion}
@@ -192,7 +190,7 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
         )}
         {dataOnMap.length > 0 &&
           dataOnMap.map((location, index) => {
-            const { geoLocation } = location;
+            const { geoLocation, type } = location;
             return (
               //add logic to check type is donation/request
               <Marker
@@ -202,7 +200,29 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
                   longitude: parseFloat(geoLocation.longitude),
                 }}
                 onPress={() => handleMarkerPress(index)}>
-                <Feather name="user" size={20} />
+                {type === 'Donation' ? (
+                  index === selectedIndex ? (
+                    <Image
+                      source={IMAGE.donationMapSelectedIcon}
+                      style={image.mapMarkerIcon}
+                    />
+                  ) : (
+                    <Image
+                      source={IMAGE.donationMapIcon}
+                      style={image.mapMarkerIcon}
+                    />
+                  )
+                ) : index === selectedIndex ? (
+                  <Image
+                    source={IMAGE.requestMapSelectedIcon}
+                    style={image.mapMarkerIcon}
+                  />
+                ) : (
+                  <Image
+                    source={IMAGE.requestMapIcon}
+                    style={image.mapMarkerIcon}
+                  />
+                )}
               </Marker>
             );
           })}
@@ -210,22 +230,18 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
       {dataOnMap !== undefined && dataOnMap.length > 0 && (
         <Animated.View
           style={[
-            styles.carouselContainer,
+            common.carouselContainer,
             { transform: [{ translateX: carouselOffset }] },
           ]}>
           {dataOnMap.map((location, index) => {
             const { donation } = location;
             return (
-              <View key={index} style={carouselItemStyle.carouselItem}>
-                <Pressable
-                  onPress={() => handleSelectLocation(location)}
-                  style={card.postInfoCard}>
-                  <Text style={[text.blackBodyHighlight]}>{donation.name}</Text>
-                  <Text style={[text.blackBodyReg]}>
-                    {donation.description}
-                  </Text>
-                </Pressable>
-              </View>
+              <MapCard
+                data={donation}
+                key={index}
+                nav={() => handleSelectLocation(location)}
+                fetching={isLoading}
+              />
             );
           })}
         </Animated.View>
@@ -234,21 +250,3 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   );
 };
 export default HomeMain;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  carouselContainer: {
-    // width: '90%',
-    // backgroundColor: '#20DD20',
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-  },
-});
