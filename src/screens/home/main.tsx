@@ -132,7 +132,11 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
       };
       const res = await postAPI.getPostByCoordinate(param);
       if (res) {
-        setDataOnMap(res);
+        const dataMap = res.filter(
+          ({ statusAvailability }) =>
+            statusAvailability.endDateTime >= new Date().toISOString(),
+        );
+        setDataOnMap(dataMap);
         dispatch(getPostByCoordinateSuccess());
         setIsLoading(false);
       }
@@ -159,8 +163,6 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   }, [carouselOffset]);
 
   const handleSelectLocation = (location: any) => {
-    // eslint-disable-next-line no-console
-    console.log('GO TO SCREEN DONATION/REQUEST INFO', location);
     navigation.navigate('PostDetail', { ...location });
   };
 
@@ -234,10 +236,9 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
             { transform: [{ translateX: carouselOffset }] },
           ]}>
           {dataOnMap.map((location, index) => {
-            const { donation } = location;
             return (
               <MapCard
-                data={donation}
+                data={location}
                 key={index}
                 nav={() => handleSelectLocation(location)}
                 fetching={isLoading}
