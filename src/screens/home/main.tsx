@@ -25,6 +25,7 @@ import PostAPI from '../../api/post';
 import { HomeTabScreenProps } from '../../types/routes/main';
 import MapCard from '../../components/cards/map';
 import IMAGE from '../../constants/image';
+import LogoHeader from '../../components/headers/logoheader';
 
 const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   const mapRef = useRef(null);
@@ -168,6 +169,7 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
 
   return (
     <View style={common.flex1}>
+      <LogoHeader nav={navigation} />
       <MapView
         ref={mapRef}
         style={common.flexCenter}

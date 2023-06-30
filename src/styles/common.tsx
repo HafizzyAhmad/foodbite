@@ -127,6 +127,9 @@ export default StyleSheet.create({
   widthHalf: {
     width: '50%',
   },
+  width80P: {
+    width: '80%',
+  },
   spacingLeft: {
     top: 4,
     left: 8,

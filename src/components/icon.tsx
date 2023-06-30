@@ -3,6 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import { View } from 'react-native';
 import image from '../styles/image';
+import { colors } from '../styles/color';
 
 type IconRightProps = {
   iconRightName: string;
@@ -70,6 +71,10 @@ function CircleBackgroundLarge({ children }: any) {
   return <View style={image.profileBackgroundLarge}>{children}</View>;
 }
 
+function RecommendedIcon() {
+  return <Ionicons name="ribbon-outline" size={25} color={colors.baseBrand} />;
+}
+
 export {
   ArrowLeft,
   IconHeaderRight,
@@ -87,4 +92,5 @@ export {
   FullLoveLarge,
   EmptyLoveLarge,
   CircleBackgroundLarge,
+  RecommendedIcon,
 };

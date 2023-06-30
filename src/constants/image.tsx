@@ -3,6 +3,7 @@ export default {
   mainPost: require('../assets/images/common-donation.png'),
   loginBanner: require('../assets/images/loginBanner.png'),
   profileBackground: require('../assets/images/image-backgrounds.png'),
+  headerLogo: require('../assets/images/header.png'),
 
   //icon
   donationIcon: require('../assets/icons/icon-donate.png'),
