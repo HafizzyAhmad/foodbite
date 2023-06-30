@@ -38,6 +38,14 @@ export interface IPost {
   items: IFoodItem[];
 }
 
+export interface IPostTile {
+  _id: string | undefined;
+  image: string;
+  type: string;
+  donation: any;
+  updated_at: string;
+}
+
 export interface IPostByCoordinateRequest {
   centerLat: number;
   centerLong: number;
