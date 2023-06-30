@@ -92,4 +92,8 @@ export default StyleSheet.create({
     width: '100%',
     height: 250,
   },
+  mapMarkerIcon: {
+    height: 40,
+    width: 40,
+  },
 });

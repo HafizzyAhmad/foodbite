@@ -1,6 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import color from './color';
 import common from './common';
+
+const { width, height } = Dimensions.get('window');
 
 const BASE = {
   // marginHorizontal: 15,
@@ -72,5 +74,11 @@ export default StyleSheet.create({
     paddingTop: 15,
     // paddingHorizontal: 10,
     paddingBottom: 15,
+  },
+  carouselItem: {
+    width: width, // Pass the width dynamically
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
   },
 });

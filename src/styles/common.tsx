@@ -156,4 +156,10 @@ export default StyleSheet.create({
   positionTop60: {
     top: '60%',
   },
+  carouselContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+  },
 });
