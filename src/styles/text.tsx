@@ -45,7 +45,11 @@ export default StyleSheet.create({
   blackButton: { ...headingBodyBold, ...color.fontBlack },
 
   greyBodyReg: { ...body, ...color.fontGrey },
+
   greyLabelText: { ...caption, ...color.fontGrey },
+  yellowLabelText: { ...caption, ...color.fontYellow },
+  greenLabelText: { ...caption, ...color.fontBrand },
+  redLabelText: { ...caption, ...color.fontRed },
 
   whiteHeadlineBold: { ...largeTitle, ...color.fontWhite },
   whiteTitleScreen: { ...titleScreen, ...color.fontWhite },

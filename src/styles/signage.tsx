@@ -63,4 +63,10 @@ export default StyleSheet.create({
     borderBottomRightRadius: 8,
     borderBottomLeftRadius: 8,
   },
+  postStatus: {
+    ...color.bgWhite,
+    ...common.paddingSmall,
+    ...common.center,
+    width: '20%',
+  },
 });

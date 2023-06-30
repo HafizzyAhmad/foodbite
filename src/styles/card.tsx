@@ -59,7 +59,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     width: '90%',
-    height: 100,
+    height: 120,
     padding: 15,
   },
   tileCard: {
