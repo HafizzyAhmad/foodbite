@@ -141,4 +141,11 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  searchBar: {
+    position: 'absolute',
+    top: 100,
+    width: '95%',
+    alignSelf: 'center',
+  },
 });

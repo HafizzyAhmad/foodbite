@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Integration of Google map in React Native using react-native-maps
 // https://aboutreact.com/react-native-map-example/
 // Import React
@@ -12,7 +13,7 @@ import {
   Image,
 } from 'react-native';
 import MapView, { Circle, Marker } from 'react-native-maps';
-import { common, image } from '../../styles';
+import { common, form, image } from '../../styles';
 import Geolocation from '@react-native-community/geolocation';
 import * as geolib from 'geolib';
 import { useStore } from '../../hooks';
@@ -26,6 +27,12 @@ import { HomeTabScreenProps } from '../../types/routes/main';
 import MapCard from '../../components/cards/map';
 import IMAGE from '../../constants/image';
 import LogoHeader from '../../components/headers/logoheader';
+import {
+  GooglePlaceData,
+  GooglePlaceDetail,
+  GooglePlacesAutocomplete,
+} from 'react-native-google-places-autocomplete';
+import CONFIG from '../../../config';
 
 const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
   const mapRef = useRef(null);
@@ -85,7 +92,6 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
           );
         },
         errorLoc => {
-          // eslint-disable-next-line no-console
           console.log('geolocation info error', errorLoc);
           setCurrentRegion(INITIAL_REGION);
 
@@ -167,89 +173,115 @@ const HomeMain = ({ navigation }: HomeTabScreenProps<'Home'>) => {
     navigation.navigate('PostDetail', { ...location });
   };
 
+  const handleSearch = async (
+    data: GooglePlaceData,
+    details: GooglePlaceDetail | null,
+  ) => {
+    const regionSearch = {
+      latitude: details?.geometry.location.lat,
+      longitude: details?.geometry.location.lng,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    };
+    setCurrentRegion(regionSearch);
+    calculateDistance(LATITUDE_DELTA, LONGITUDE_DELTA);
+  };
+
   return (
-    <View style={common.flex1}>
-      <LogoHeader nav={navigation} />
-      <MapView
-        ref={mapRef}
-        style={common.flexCenter}
-        // onRegionChange={handleRegionChange}
-        initialRegion={INITIAL_REGION}
-        region={currentRegion}
-        showsUserLocation
-        onRegionChangeComplete={region => {
-          if (currentRegion !== region) {
-            setCurrentRegion(region);
-          }
-          handleRegionChangeComplete(region);
-        }}>
-        {currentRegion && (
-          <Circle
-            center={currentRegion}
-            radius={1000}
-            // fillColor="red"
-            strokeColor="transparent"
-            // strokeWidth={2}
-          />
-        )}
-        {dataOnMap.length > 0 &&
-          dataOnMap.map((location, index) => {
-            const { geoLocation, type } = location;
-            return (
-              //add logic to check type is donation/request
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: parseFloat(geoLocation.latitude),
-                  longitude: parseFloat(geoLocation.longitude),
-                }}
-                onPress={() => handleMarkerPress(index)}>
-                {type === 'Donation' ? (
-                  index === selectedIndex ? (
+    <>
+      <View style={common.flex1}>
+        <LogoHeader nav={navigation} />
+        <MapView
+          ref={mapRef}
+          style={common.flexCenter}
+          // onRegionChange={handleRegionChange}
+          initialRegion={INITIAL_REGION}
+          region={currentRegion}
+          showsUserLocation
+          onRegionChangeComplete={region => {
+            if (currentRegion !== region) {
+              setCurrentRegion(region);
+            }
+            handleRegionChangeComplete(region);
+          }}>
+          {currentRegion && (
+            <Circle
+              center={currentRegion}
+              radius={1000}
+              // fillColor="red"
+              strokeColor="transparent"
+              // strokeWidth={2}
+            />
+          )}
+          {dataOnMap.length > 0 &&
+            dataOnMap.map((location, index) => {
+              const { geoLocation, type } = location;
+              return (
+                //add logic to check type is donation/request
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: parseFloat(geoLocation.latitude),
+                    longitude: parseFloat(geoLocation.longitude),
+                  }}
+                  onPress={() => handleMarkerPress(index)}>
+                  {type === 'Donation' ? (
+                    index === selectedIndex ? (
+                      <Image
+                        source={IMAGE.donationMapSelectedIcon}
+                        style={image.mapMarkerIcon}
+                      />
+                    ) : (
+                      <Image
+                        source={IMAGE.donationMapIcon}
+                        style={image.mapMarkerIcon}
+                      />
+                    )
+                  ) : index === selectedIndex ? (
                     <Image
-                      source={IMAGE.donationMapSelectedIcon}
+                      source={IMAGE.requestMapSelectedIcon}
                       style={image.mapMarkerIcon}
                     />
                   ) : (
                     <Image
-                      source={IMAGE.donationMapIcon}
+                      source={IMAGE.requestMapIcon}
                       style={image.mapMarkerIcon}
                     />
-                  )
-                ) : index === selectedIndex ? (
-                  <Image
-                    source={IMAGE.requestMapSelectedIcon}
-                    style={image.mapMarkerIcon}
-                  />
-                ) : (
-                  <Image
-                    source={IMAGE.requestMapIcon}
-                    style={image.mapMarkerIcon}
-                  />
-                )}
-              </Marker>
-            );
-          })}
-      </MapView>
-      {dataOnMap !== undefined && dataOnMap.length > 0 && (
-        <Animated.View
-          style={[
-            common.carouselContainer,
-            { transform: [{ translateX: carouselOffset }] },
-          ]}>
-          {dataOnMap.map((location, index) => {
-            return (
-              <MapCard
-                data={location}
-                key={index}
-                nav={() => handleSelectLocation(location)}
-                fetching={isLoading}
-              />
-            );
-          })}
-        </Animated.View>
-      )}
-    </View>
+                  )}
+                </Marker>
+              );
+            })}
+        </MapView>
+        {dataOnMap !== undefined && dataOnMap.length > 0 && (
+          <Animated.View
+            style={[
+              common.carouselContainer,
+              { transform: [{ translateX: carouselOffset }] },
+            ]}>
+            {dataOnMap.map((location, index) => {
+              return (
+                <MapCard
+                  data={location}
+                  key={index}
+                  nav={() => handleSelectLocation(location)}
+                  fetching={isLoading}
+                />
+              );
+            })}
+          </Animated.View>
+        )}
+      </View>
+      <View style={form.searchBar}>
+        <GooglePlacesAutocomplete
+          placeholder="Type a place"
+          onPress={(data, details = null) => handleSearch(data, details)}
+          query={{ key: CONFIG.GOOGLE_PLACES_API_KEY }}
+          fetchDetails={true}
+          onFail={error => console.log(error)}
+          onNotFound={() => console.log('no results')}
+        />
+      </View>
+    </>
   );
 };
 export default HomeMain;
