@@ -49,6 +49,15 @@ export interface IRateStore {
   isError: boolean;
 }
 
+export interface IRecommendedRating {
+  userId: string;
+  providerName: string;
+  ratingScore: Float;
+  totalRators: number;
+  foodDonation: IPost[];
+  reviews: ISubmitRating[];
+}
+
 export type RatingReducerAction = {
   type: RatingReducerActionType;
   payload?: any;

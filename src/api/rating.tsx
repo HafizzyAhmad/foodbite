@@ -1,5 +1,9 @@
 import HTTP from '../libs/http';
-import { IPostRating, ISubmitRating } from '../types/stores/rating';
+import {
+  IPostRating,
+  IRecommendedRating,
+  ISubmitRating,
+} from '../types/stores/rating';
 
 class RatingAPI extends HTTP {
   /**
@@ -22,6 +26,12 @@ class RatingAPI extends HTTP {
   async submitRating(data: ISubmitRating) {
     const url = '/v1/rating/create';
     const res: ISubmitRating = await this.post(url, data);
+    return res;
+  }
+
+  async getRecommendedRating() {
+    const url = '/v1/rating/recommendedUserByRating';
+    const res: IRecommendedRating = await this.get(url);
     return res;
   }
 }
