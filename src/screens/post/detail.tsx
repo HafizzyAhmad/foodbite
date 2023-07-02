@@ -25,6 +25,7 @@ const PostDetail = ({
   route,
 }: StackTabScreenProps<'PostDetail'> | any) => {
   const {
+    type,
     donation,
     address,
     postcode,
@@ -145,9 +146,16 @@ const PostDetail = ({
             startDateTime,
           )} to ${Formatter.dateTime(endDateTime)}`}</Text>
           <View style={common.paddingVerticalMedium}>
-            <Text style={text.greyBodyReg}>DONATION ITEM</Text>
+            <Text style={text.greyBodyReg}>{`${
+              type === 'Donation' ? 'DONATION' : 'REQUEST'
+            } ITEM`}</Text>
             {items.map((item: IFoodItem) => (
-              <BasicList key={item.id} param={item.name} value={item.price} />
+              <BasicList
+                key={item.id}
+                param={item.name}
+                value={item.price}
+                type={type}
+              />
             ))}
           </View>
           <View style={common.paddingVerticalMedium}>

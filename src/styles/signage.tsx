@@ -67,6 +67,6 @@ export default StyleSheet.create({
     ...color.bgWhite,
     ...common.paddingSmall,
     ...common.center,
-    width: '20%',
+    width: '25%',
   },
 });
