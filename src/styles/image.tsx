@@ -96,4 +96,8 @@ export default StyleSheet.create({
     height: 40,
     width: 40,
   },
+  badgeImage: {
+    height: 60,
+    width: 60,
+  },
 });
