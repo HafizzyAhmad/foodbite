@@ -1,60 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../elements/layout';
 import { common } from '../../styles';
 import ArrowHeader from '../../components/headers/arrowheader';
-import { FlatList } from 'react-native';
+import { ActivityIndicator, Alert, FlatList } from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import RecommendedDonor from '../../components/lists/recommended';
+import RatingAPI from '../../api/rating';
+import { useStore } from '../../hooks';
+import { IRecommendedRating } from '../../types/stores/rating';
 
 const Recommended = ({ navigation }: StackTabScreenProps<'Recommended'>) => {
-  const data = [
-    {
-      userId: 12343,
-      providerName: 'Hafizzy Ahmad',
-      ratingScore: 2.32,
-      totalRators: 5,
-      foodDonation: [
-        {
-          image: '',
-          type: 'Donation',
-          createdById: 12341,
-          donation: {
-            name: 'Bantuan Makanan',
-            description: 'Makanan untuk anda semua',
-          },
-          address: 'Simpang Empat Tebuk Haji Sidek',
-          postcode: 45300,
-          city: 'Sungai Besar',
-          state: 'Selangor',
-          mobileNumber: '01110001000',
-          geoLocation: {
-            latitude: 3.2123,
-            longitude: 3.2311,
-          },
-          statusAvailability: {
-            startDateTime: '2023-06-26T17:07:53.372Z',
-            endDateTime: '2023-07-25T17:07:53.372Z',
-            status: 'Submitted',
-          },
-          items: [
-            {
-              name: 'Nasi Lemak',
-              price: 0.0,
-            },
-          ],
-        },
-      ],
-      reviews: [
-        {
-          userId: 234234,
-          ratorUserId: 34532,
-          ratingValue: 2,
-          image: '',
-          feedback: 'Penderma yang pemurah',
-        },
-      ],
-    },
-  ];
+  const [globalState] = useStore();
+  const { app } = globalState;
+
+  const [recommended, setRecommended] = useState<IRecommendedRating[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const ratingAPI = new RatingAPI(app.token);
+
+  async function getRecommendedRating() {
+    setIsLoading(true);
+    try {
+      const res: any = await ratingAPI.getRecommendedRating();
+
+      const removeNoRating = res.filter(
+        ({ ratingScore }: any) => ratingScore > 0,
+      );
+      const removeNoDonation = removeNoRating.filter(
+        ({ foodDonation }: any) => foodDonation.length > 0,
+      );
+
+      if (res) {
+        setRecommended(removeNoDonation);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      Alert.alert('Oh uh! Something went wrong. Please try again later');
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (app.token) {
+      getRecommendedRating();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [app.token]);
 
   return (
     <Layout custom={common.basicLayout}>
@@ -63,11 +54,19 @@ const Recommended = ({ navigation }: StackTabScreenProps<'Recommended'>) => {
         title="Recommended Members"
         disableBack={false}
       />
-      <FlatList
-        data={data}
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        renderItem={data => <RecommendedDonor data={data} nav={navigation} />}
-      />
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          data={recommended}
+          // eslint-disable-next-line @typescript-eslint/no-shadow
+          renderItem={recommended => (
+            <RecommendedDonor data={recommended} nav={navigation} />
+          )}
+          refreshing={isLoading}
+          onRefresh={() => getRecommendedRating()}
+        />
+      )}
     </Layout>
   );
 };
