@@ -88,6 +88,7 @@ const SubmitRating = ({
       });
 
   async function onSubmit(data: ISubmitRating) {
+    const rateAPI = new RatingAPI(app.token);
     dispatch(addRating());
     try {
       const res: ISubmitRating = await rateAPI.submitRating(data);
@@ -112,7 +113,7 @@ const SubmitRating = ({
       image: selectedImage,
       feedback: feedback,
     };
-    // console.log('CHECK DATA: ', data);
+    console.log('CHECK DATA: ', data);
 
     onSubmit(data);
   };
