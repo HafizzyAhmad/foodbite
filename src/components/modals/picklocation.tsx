@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Modal } from 'react-native';
+import { Modal, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import RowBottomAction from '../buttons/rowbutton';
-import { common } from '../../styles';
+import { common, form } from '../../styles';
+import {
+  GooglePlaceData,
+  GooglePlaceDetail,
+  GooglePlacesAutocomplete,
+} from 'react-native-google-places-autocomplete';
+import CONFIG from '../../../config';
 
 type IPropsLocationPickerModal = {
   visible: boolean;
@@ -60,6 +66,22 @@ const LocationPickerModal = ({
     }
   };
 
+  const handleSearch = async (
+    data: GooglePlaceData,
+    details: GooglePlaceDetail | null,
+  ) => {
+    const LATITUDE_DELTA = 0.006;
+    const LONGITUDE_DELTA = 0.003;
+    const regionSearch = {
+      latitude: details?.geometry.location.lat,
+      longitude: details?.geometry.location.lng,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    };
+    setCurrentRegion(regionSearch);
+    // calculateDistance(LATITUDE_DELTA, LONGITUDE_DELTA);
+  };
+
   return (
     <Modal visible={visible} animationType="slide">
       <MapView
@@ -83,6 +105,16 @@ const LocationPickerModal = ({
         navPrimary={handleLocationSelect}
         navSecondary={onClose}
       />
+      <View style={form.searchBar}>
+        <GooglePlacesAutocomplete
+          placeholder="Type a place"
+          onPress={(data, details = null) => handleSearch(data, details)}
+          query={{ key: CONFIG.GOOGLE_PLACES_API_KEY }}
+          fetchDetails={true}
+          onFail={error => console.log(error)}
+          onNotFound={() => console.log('no results')}
+        />
+      </View>
     </Modal>
   );
 };
