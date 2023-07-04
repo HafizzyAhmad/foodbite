@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../elements/layout';
 import { common, image, signage, text } from '../../styles';
 import ArrowHeader from '../../components/headers/arrowheader';
-import { Alert, Image, ScrollView, Text, View } from 'react-native';
+import { Alert, Image, Linking, ScrollView, Text, View } from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import BottomActionButton from '../../components/buttons/bottombutton';
 import Formatter from '../../utils/formatter';
@@ -93,7 +93,19 @@ const PostDetail = ({
   };
 
   const handleButton = () => {
-    console.log('SHOW ME THE WAY', latitude, longitude);
+    const url = `https://maps.google.com/maps?q=${latitude},${longitude}`;
+
+    Linking.canOpenURL(url)
+      .then(supported => {
+        if (supported) {
+          return Linking.openURL(url);
+        } else {
+          console.log('Maps app is not available.');
+        }
+      })
+      .catch(error =>
+        console.log('An error occurred while opening the maps app:', error),
+      );
   };
 
   const today = new Date().toISOString();
