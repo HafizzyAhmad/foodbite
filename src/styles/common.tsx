@@ -6,6 +6,7 @@ const BASIC = {
 };
 
 export default StyleSheet.create({
+  basicFlex: BASIC,
   flexCenter: {
     ...BASIC,
     justifyContent: 'center',

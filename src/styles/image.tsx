@@ -104,4 +104,13 @@ export default StyleSheet.create({
     height: 60,
     width: 60,
   },
+  fullImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  zoomContent: {
+    flex: 1,
+    alignSelf: 'stretch',
+  },
 });
