@@ -56,6 +56,10 @@ function HalfLove() {
   return <Ionicons name="heart-half" size={20} color={'red'} />;
 }
 
+function HalfLoveLarge() {
+  return <Ionicons name="heart-half" size={40} color={'red'} />;
+}
+
 function EmptyLove() {
   return <Ionicons name="heart-outline" size={20} color={'red'} />;
 }
@@ -90,6 +94,7 @@ export {
   EmptyLove,
   CircleBackground,
   FullLoveLarge,
+  HalfLoveLarge,
   EmptyLoveLarge,
   CircleBackgroundLarge,
   RecommendedIcon,
