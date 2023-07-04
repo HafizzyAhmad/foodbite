@@ -9,7 +9,7 @@ import { RatingLove } from '../../utils/ratinglove';
 const ListReview = ({ reviews }: any) => {
   return reviews ? (
     reviews.map((item): any => (
-      <View style={[common.flexRowSpaceBetween, common.paddingVerticalMedium]}>
+      <View style={[common.flexRowSpaceBetween, common.paddingContainer]}>
         <View style={[common.flexRow]} key={item.updated_at}>
           <CircleBackground>
             <UserIcon />
