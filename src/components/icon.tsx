@@ -79,6 +79,10 @@ function RecommendedIcon() {
   return <Ionicons name="ribbon-outline" size={25} color={colors.baseBrand} />;
 }
 
+function Close() {
+  return <Feather name="x" size={20} color={colors.baseBrand} />;
+}
+
 export {
   ArrowLeft,
   IconHeaderRight,
@@ -98,4 +102,5 @@ export {
   EmptyLoveLarge,
   CircleBackgroundLarge,
   RecommendedIcon,
+  Close,
 };
