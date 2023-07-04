@@ -34,7 +34,7 @@ import { useStore } from '../../hooks';
 import { addPost, addPostFailed, addPostSuccess } from '../../stores/post';
 import PostAPI from '../../api/post';
 
-const RequestForm = ({ navigation }: StackTabScreenProps<'DonateForm'>) => {
+const RequestForm = ({ navigation }: StackTabScreenProps<'RequestForm'>) => {
   const [globalState, dispatch] = useStore();
   const { app } = globalState;
   const { heightOffset, onIncrementFocus } = useOffset();
