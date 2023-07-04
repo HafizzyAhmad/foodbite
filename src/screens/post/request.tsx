@@ -57,7 +57,7 @@ const RequestForm = ({ navigation }: StackTabScreenProps<'RequestForm'>) => {
 
   // location coordinate
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<any>({});
+  const [selectedLocation, setSelectedLocation] = useState<any>([]);
 
   // form validation
   const [isValidCity, setIsValidCity] = useState<boolean>(true);
@@ -175,7 +175,7 @@ const RequestForm = ({ navigation }: StackTabScreenProps<'RequestForm'>) => {
     },
     {
       key: 'Add Precise Location',
-      placeholder: 'eg: Skudai',
+      placeholder: 'Coordinate of your location',
       value: selectedLocation,
       method: () => setModalVisible(true),
       type: 'picklocation',
@@ -544,13 +544,15 @@ const RequestForm = ({ navigation }: StackTabScreenProps<'RequestForm'>) => {
                     <Pressable style={form.input} onPress={options.method}>
                       <Text
                         style={
-                          options.value === undefined
+                          options.value.length === 0
                             ? text.greyBodyReg
                             : text.blackBodyReg
                         }>
-                        {options.value === undefined
+                        {options.value.length === 0
                           ? placeholder
-                          : `${options.value[0]}, ${options.value[1]}`}
+                          : `${options.value[0].toFixed(
+                              6,
+                            )}, ${options.value[1].toFixed(6)}`}
                       </Text>
                     </Pressable>
                   )}

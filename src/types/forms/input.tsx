@@ -7,7 +7,7 @@ export type IInputForm = {
   data?: any;
   method: ([key]: any) => void;
   value?: any;
-  type: string;
+  type: string | number;
   isValid?: boolean;
   errorMessage?: string;
   secureTextEntry?: boolean;
