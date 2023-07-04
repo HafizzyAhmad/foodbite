@@ -14,7 +14,7 @@ import EmptySection from '../../components/emptysection';
 
 const ProfileMain = ({
   navigation,
-}: StackTabScreenProps<'PostProfileDetail'>) => {
+}: StackTabScreenProps<'PostProfileDetail'> | any) => {
   const [isActive, setIsActive] = useState<string>('Posts');
   const [globalState] = useStore();
   const [foodDonation, setFoodDonation] = useState<any>([]);
