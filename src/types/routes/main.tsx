@@ -36,6 +36,7 @@ export type RootStackParamList = {
   RegisterProfile: any;
   LoginMain: any;
   Recommended: any;
+  RecommendedUser: any;
 };
 
 /**
