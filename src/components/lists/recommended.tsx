@@ -14,7 +14,7 @@ const RecommendedDonor = ({ data, nav }: any) => {
         common.paddingVerticalMedium,
         common.paddingHorizontalContainer,
       ]}
-      onPress={() => nav.navigate('PostDetail', item.foodDonation[0])}>
+      onPress={() => nav.navigate('RecommendedUser', item)}>
       <View style={[common.flexRow, common.centerVertically]}>
         <ImageBackground
           source={IMAGE.badgeRanking}
@@ -22,10 +22,12 @@ const RecommendedDonor = ({ data, nav }: any) => {
           <Text style={text.brandButton}>{`${index + 1}`}</Text>
         </ImageBackground>
         <View style={common.paddingHorizontalContainer}>
-          <Text style={text.blackBodyHighlight}>
-            {item.foodDonation[0].donation.name}
-          </Text>
-          <Text style={text.greyLabelText}>{`By ${item.providerName}`}</Text>
+          <Text style={text.blackBodyHighlight}>{item.providerName}</Text>
+          <Text
+            style={
+              text.greyLabelText
+            }>{`Peoples like ${item.ratingScore.toFixed(1)} out of 5`}</Text>
+          <Text style={text.greyLabelText}>{`${item.totalRators} voted`}</Text>
           <View style={common.flexRow}>{RatingLove(item.ratingScore)}</View>
         </View>
       </View>
