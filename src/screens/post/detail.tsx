@@ -2,7 +2,20 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../elements/layout';
 import { common, image, signage, text } from '../../styles';
 import ArrowHeader from '../../components/headers/arrowheader';
-import { Alert, Image, Linking, ScrollView, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Animated,
+  Dimensions,
+  Image,
+  Linking,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import BottomActionButton from '../../components/buttons/bottombutton';
 import Formatter from '../../utils/formatter';
@@ -10,6 +23,7 @@ import BasicList from '../../components/lists/basic';
 import { IFoodItem } from '../../types/stores/donate';
 import {
   CircleBackground,
+  Close,
   EmptyLove,
   FullLove,
   HalfLove,
@@ -19,6 +33,8 @@ import RatingAPI from '../../api/rating';
 import { useStore } from '../../hooks';
 import { IPostRating } from '../../types/stores/rating';
 import TextButton from '../../components/buttons/textbutton';
+import { ImageZoom } from '@likashefqet/react-native-image-zoom';
+import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 
 const PostDetail = ({
   navigation,
@@ -46,6 +62,17 @@ const PostDetail = ({
   const { latitude, longitude } = geoLocation;
   const { startDateTime, endDateTime } = statusAvailability;
   const { app } = globalState;
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const zoomAnimatedValue = React.useRef(new Animated.Value(1)).current;
+
+  const handlePress = () => {
+    setModalVisible(true);
+  };
+
+  const handleClose = () => {
+    setModalVisible(false);
+  };
 
   useEffect(() => {
     const ratingAPI = new RatingAPI(app.token);
@@ -114,10 +141,12 @@ const PostDetail = ({
     <Layout custom={[common.basicLayout]}>
       <ArrowHeader nav={navigation} title={donation.name} disableBack={false} />
       <ScrollView style={[common.paddingHorizontalContainer]}>
-        <Image
-          source={{ uri: bannerImage }}
-          style={[image.selectedThumbnail]}
-        />
+        <Pressable onPress={handlePress}>
+          <Image
+            source={{ uri: bannerImage }}
+            style={[image.selectedThumbnail]}
+          />
+        </Pressable>
         <View style={common.paddingVerticalMedium}>
           <Text style={text.blackHeadingBold}>{donation.description}</Text>
           <View style={common.paddingVerticalMedium}>
@@ -208,6 +237,34 @@ const PostDetail = ({
         onPress={handleButton}
         isInactive={false}
       />
+      <Modal
+        visible={modalVisible}
+        // transparent={true}
+        onRequestClose={handleClose}>
+        {/* <View style={{ flex: 1, backgroundColor: 'black' }}> */}
+        <ReactNativeZoomableView
+          maxZoom={30}
+          initialZoom={1}
+          // Give these to the zoomable view so it can apply the boundaries around the actual content.
+          // Need to make sure the content is actually centered and the width and height are
+          // measured when it's rendered naturally. Not the intrinsic sizes.
+          // For example, an image with an intrinsic size of 400x200 will be rendered as 300x150 in this case.
+          // Therefore, we'll feed the zoomable view the 300x100 size.
+          contentWidth={300}
+          contentHeight={300}
+          panBoundaryPadding={50}
+          zoomAnimatedValue={zoomAnimatedValue}>
+          <Image style={image.fullImage} source={{ uri: bannerImage }} />
+        </ReactNativeZoomableView>
+        <Pressable
+          style={{ position: 'absolute', right: 30, top: 50 }}
+          onPress={handleClose}>
+          <CircleBackground>
+            <Close />
+          </CircleBackground>
+        </Pressable>
+        {/* </View> */}
+      </Modal>
     </Layout>
   );
 };
