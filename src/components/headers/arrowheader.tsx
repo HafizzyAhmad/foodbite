@@ -19,9 +19,11 @@ function ArrowHeader({ nav, title, disableBack }: Props) {
           <ArrowLeft />
         </TouchableOpacity>
       )}
-      <Text style={[text.blackScreenBrand, common.paddingVerticalMedium]}>
-        {title}
-      </Text>
+      {title && (
+        <Text style={[text.blackScreenBrand, common.paddingVerticalMedium]}>
+          {title}
+        </Text>
+      )}
     </View>
   );
 }
