@@ -49,11 +49,7 @@ const Recommended = ({ navigation }: StackTabScreenProps<'Recommended'>) => {
 
   return (
     <Layout custom={common.basicLayout}>
-      <ArrowHeader
-        nav={navigation}
-        title="Recommended Members"
-        disableBack={false}
-      />
+      <ArrowHeader nav={navigation} title="Recommended" disableBack={false} />
       {isLoading ? (
         <ActivityIndicator />
       ) : (
