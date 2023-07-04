@@ -272,8 +272,6 @@ const RequestForm = ({ navigation }: StackTabScreenProps<'RequestForm'>) => {
     }
   };
 
-  console.log('CHECK FOOD ITEMS: ', foodItems);
-
   const handleRemoveItem = (id: string) => {
     setFoodItems(prevItems => prevItems.filter(item => item.id !== id));
   };
@@ -626,7 +624,7 @@ const RequestForm = ({ navigation }: StackTabScreenProps<'RequestForm'>) => {
         </KeyboardAvoidingView>
       </ScrollView>
       <BottomActionButton
-        content={'Submit Donation'}
+        content={'Submit Request'}
         onPress={handleSubmit}
         isInactive={false}
       />
