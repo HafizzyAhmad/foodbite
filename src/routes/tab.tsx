@@ -25,7 +25,7 @@ const TabNavigator: React.FC = () => {
             const path: { [key: string]: string } = {
               Home: 'home',
               FoodBite: 'heart',
-              Profile: 'activity',
+              Profile: 'smile',
             };
             return path[name];
           }
