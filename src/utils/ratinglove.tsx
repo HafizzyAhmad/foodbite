@@ -1,5 +1,12 @@
 import React from 'react';
-import { EmptyLove, FullLove, HalfLove } from '../components/icon';
+import {
+  EmptyLove,
+  EmptyLoveLarge,
+  FullLove,
+  FullLoveLarge,
+  HalfLove,
+  HalfLoveLarge,
+} from '../components/icon';
 
 function RatingLove(score: number) {
   const totalRating = 5;
@@ -20,4 +27,23 @@ function RatingLove(score: number) {
   return love;
 }
 
-export { RatingLove };
+function RatingLoveLarge(score: number) {
+  const totalRating = 5;
+  const fullRating = Math.floor(score);
+  const hasHalfRating = score - fullRating >= 0.5;
+
+  const love = Array(totalRating)
+    .fill(null)
+    .map((_, index) => {
+      if (index < fullRating) {
+        return <FullLoveLarge key={`love-${index}`} />;
+      } else if (index === fullRating && hasHalfRating) {
+        return <HalfLoveLarge key="love-half" />;
+      } else {
+        return <EmptyLoveLarge key={`love-empty-${index}`} />;
+      }
+    });
+  return love;
+}
+
+export { RatingLove, RatingLoveLarge };
