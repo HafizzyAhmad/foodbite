@@ -1,26 +1,24 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import Layout from '../../elements/layout';
-import { common, image, signage, text } from '../../styles';
+import { common, image, modal, signage, text } from '../../styles';
 import ArrowHeader from '../../components/headers/arrowheader';
 import {
-  ActivityIndicator,
   Alert,
   Animated,
-  Dimensions,
   Image,
   Linking,
   Modal,
   Pressable,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import BottomActionButton from '../../components/buttons/bottombutton';
 import Formatter from '../../utils/formatter';
 import BasicList from '../../components/lists/basic';
-import { IFoodItem } from '../../types/stores/donate';
+import { IFoodItem, IPost } from '../../types/stores/donate';
 import {
   CircleBackground,
   Close,
@@ -33,14 +31,15 @@ import RatingAPI from '../../api/rating';
 import { useStore } from '../../hooks';
 import { IPostRating } from '../../types/stores/rating';
 import TextButton from '../../components/buttons/textbutton';
-import { ImageZoom } from '@likashefqet/react-native-image-zoom';
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
+import PostAPI from '../../api/post';
 
 const PostDetail = ({
   navigation,
   route,
 }: StackTabScreenProps<'PostDetail'> | any) => {
   const {
+    _id,
     type,
     donation,
     address,
@@ -54,6 +53,8 @@ const PostDetail = ({
     createdById,
     createdByUserName,
   } = route.params;
+
+  console.log('CHECK FOOD ID: ', route.params._id);
 
   const bannerImage = route.params?.image;
   const [globalState] = useStore();
@@ -76,6 +77,7 @@ const PostDetail = ({
 
   useEffect(() => {
     const ratingAPI = new RatingAPI(app.token);
+    const postAPI = new PostAPI(app.token);
     async function viewPostedDetail() {
       try {
         const res: IPostRating = await ratingAPI.getRatingByPost(
@@ -88,10 +90,18 @@ const PostDetail = ({
         Alert.alert('Oh uh! Some of the information could not loaded');
       }
     }
+
+    async function getFoodById() {
+      try {
+        const res: IPost = await postAPI.getPostById(_id);
+        console.log('CHECK RESPONSE FOOD: ', res);
+      } catch (error) {}
+    }
     if (app.token) {
       viewPostedDetail();
+      getFoodById();
     }
-  }, [app.token, createdById, createdById.id]);
+  }, [_id, app.token, createdById, createdById.id]);
 
   const renderRating = () => {
     const score = rating?.ratingScore;
@@ -256,9 +266,7 @@ const PostDetail = ({
           zoomAnimatedValue={zoomAnimatedValue}>
           <Image style={image.fullImage} source={{ uri: bannerImage }} />
         </ReactNativeZoomableView>
-        <Pressable
-          style={{ position: 'absolute', right: 30, top: 50 }}
-          onPress={handleClose}>
+        <Pressable style={modal.modalClose} onPress={handleClose}>
           <CircleBackground>
             <Close />
           </CircleBackground>

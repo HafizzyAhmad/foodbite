@@ -20,6 +20,12 @@ class PostAPI extends HTTP {
     const res = await this.get(url);
     return res;
   }
+
+  async getPostById(id: string): Promise<IPost> {
+    const url = `/v1/food/donation/${id}`;
+    const res = await this.get(url);
+    return res;
+  }
 }
 
 export default PostAPI;
