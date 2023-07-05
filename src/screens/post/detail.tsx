@@ -223,7 +223,7 @@ const PostDetail = ({
                   <Text
                     style={[
                       text.greyLabelText,
-                    ]}>{`Rating: ${rating?.ratingScore}`}</Text>
+                    ]}>{`Rating: ${rating?.ratingScore.toFixed(2)}`}</Text>
                   <View style={common.flexRow}>{renderRating()}</View>
                 </View>
               </View>
