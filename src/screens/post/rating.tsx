@@ -4,6 +4,7 @@ import ArrowHeader from '../../components/headers/arrowheader';
 import {
   Alert,
   Image,
+  RefreshControl,
   ScrollView,
   Text,
   TextInput,
@@ -45,31 +46,30 @@ const SubmitRating = ({
   const [imageName, setImageName] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [reviews, setReviews] = useState<any>([]);
-  const [loadingReview, setLoadingReview] = useState<boolean>();
+  const [isRefreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
     async function onGetReviews() {
       const rateAPI = new RatingAPI(app.token);
-      setLoadingReview(true);
       dispatch(getDonationRating());
       try {
         const res: IPostRating = await rateAPI.getRatingByPost(id);
         if (res) {
           dispatch(getDonationRatingSuccess());
-          setLoadingReview(false);
+          setRefreshing(false);
           setReviews(res.reviews);
         }
       } catch (error) {
         Alert.alert('Oh uh! We cannot retrieve all the reviews');
         dispatch(getDonationRatingFailed());
-        setLoadingReview(false);
+        setRefreshing(false);
       }
     }
 
     if (app.token) {
       onGetReviews();
     }
-  }, [app.token, dispatch, id]);
+  }, [app.token, dispatch, id, isRefreshing]);
 
   const handleRating = (value: React.SetStateAction<number>) => {
     setRating(value);
@@ -89,17 +89,20 @@ const SubmitRating = ({
 
   async function onSubmit(data: ISubmitRating) {
     const rateAPI = new RatingAPI(app.token);
+    setRefreshing(true);
     dispatch(addRating());
     try {
       const res: ISubmitRating = await rateAPI.submitRating(data);
       if (res) {
         dispatch(addRatingSuccess());
+        setRefreshing(false);
         Alert.alert('Success! Thank you for your feedbacks');
         setRating(0);
         setFeedback('');
       }
     } catch (error) {
       dispatch(addRatingFailed());
+      setRefreshing(false);
       Alert.alert('Oh uh! Something went wrong. Please try again later.');
     }
   }
@@ -113,8 +116,6 @@ const SubmitRating = ({
       image: selectedImage,
       feedback: feedback,
     };
-    console.log('CHECK DATA: ', data);
-
     onSubmit(data);
   };
 
@@ -125,7 +126,14 @@ const SubmitRating = ({
         title="Rating and Feedback"
         disableBack={false}
       />
-      <ScrollView style={[common.paddingHorizontalContainer]}>
+      <ScrollView
+        style={[common.paddingHorizontalContainer]}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={() => setRefreshing(true)}
+          />
+        }>
         <View style={[common.flexRow, common.center]}>
           {[1, 2, 3, 4, 5].map(index => (
             <TouchableOpacity
