@@ -1,13 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useStore } from '../../hooks';
 import AuthAPI from '../../api/auth';
-import { IAuthLoginRequest } from '../../types/stores/app';
 import { IInputForm } from '../../types/forms/input';
 import {
   Alert,
   ImageBackground,
   KeyboardAvoidingView,
-  Platform,
   StyleProp,
   Text,
   TextInput,
@@ -83,7 +81,6 @@ const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
   }
 
   const onRegister = () => {
-    console.log('Go to Screen Register');
     navigation.navigate('RegisterProfile');
   };
 
