@@ -3,8 +3,8 @@ export default {
 
   get base() {
     const prefix = this.isProduction
-      ? 'robin.foodbite.com.my'
-      : 'http://192.168.0.124:8080';
+      ? 'https://embarrassed-gloves-colt.cyclic.app/'
+      : 'http://192.168.0.141:8080';
     return prefix;
   },
 
