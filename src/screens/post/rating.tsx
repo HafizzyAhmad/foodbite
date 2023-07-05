@@ -193,7 +193,7 @@ const SubmitRating = ({
       <BottomActionButton
         content={'Submit Rating'}
         onPress={handleSubmit}
-        isInactive={rating === 0 ? true : false}
+        isInactive={rating === 0 || feedback === '' ? true : false}
       />
     </Layout>
   );
