@@ -11,6 +11,7 @@ import { useStore } from '../../hooks';
 import { IRating } from '../../types/stores/rating';
 import ProfileHeader from '../../components/headers/profileheader';
 import EmptySection from '../../components/emptysection';
+import { useIsFocused } from '@react-navigation/native';
 
 const ProfileMain = ({
   navigation,
@@ -21,6 +22,7 @@ const ProfileMain = ({
   const [reviews, setReviews] = useState<any>([]);
   const [score, setScore] = useState<number>(0);
   const { app } = globalState;
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const rateAPI = new RatingAPI(app.token);
@@ -39,7 +41,7 @@ const ProfileMain = ({
     if (app.token) {
       getRatingProfile();
     }
-  }, [app.profile?._id, app.token]);
+  }, [app.profile._id, app.token, isFocused]);
 
   const tab = [
     {
