@@ -133,7 +133,7 @@ class HTTP {
   }
 
   /**
-   * use this method to perform POST request
+   * use this method to perform PUT request
    * @param     endpoint      string      endpoint set up the backend team
    * @param     data          any         params based on the api specs // TODO implement generics
    * @returns Promise<any>
@@ -144,6 +144,25 @@ class HTTP {
         method: 'PUT',
         url: endpoint,
         data,
+        params,
+      });
+      return this.handleSuccessResponse(response);
+    } catch (error) {
+      return this.handleFailResponse(error);
+    }
+  }
+
+  /**
+   * use this method to perform DELETE request
+   * @param     endpoint      string      endpoint set up the backend team
+   * @param     data          any         params based on the api specs // TODO implement generics
+   * @returns Promise<any>
+   */
+  async delete(endpoint: string, params?: any) {
+    try {
+      const response = await this.instance.request({
+        method: 'DELETE',
+        url: endpoint,
         params,
       });
       return this.handleSuccessResponse(response);
