@@ -26,6 +26,18 @@ class PostAPI extends HTTP {
     const res = await this.get(url);
     return res;
   }
+
+  async updatePostById(id: string, data: any): Promise<IPost> {
+    const url = `/v1/food/donation/${id}`;
+    const res = await this.put(url, data);
+    return res;
+  }
+
+  async deletePostById(id: string): Promise<IPost> {
+    const url = `/v1/food/donation/${id}`;
+    const res = await this.delete(url);
+    return res;
+  }
 }
 
 export default PostAPI;
