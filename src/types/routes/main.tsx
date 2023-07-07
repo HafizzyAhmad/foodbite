@@ -28,6 +28,7 @@ export type RootStackParamList = {
   Tab: NavigatorScreenParams<HomeTabParamList>;
   DonateForm: any;
   RequestForm: any;
+  UpdateForm: any;
   Complete: any;
   PostDetail: any;
   SubmitRating: any;

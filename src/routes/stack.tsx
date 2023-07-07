@@ -12,6 +12,7 @@ import Setting from '../screens/profile/setting';
 import RegisterProfile from '../screens/auth/register';
 import Recommended from '../screens/home/recommended';
 import RecommendedUser from '../screens/home/recommendeduser';
+import UpdateForm from '../screens/post/update';
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
@@ -27,6 +28,7 @@ const StackNavigator: React.FC = () => {
       <Screen name="Tab" component={TabNavigator} />
       <Screen name="DonateForm" component={DonateForm} />
       <Screen name="RequestForm" component={RequestForm} />
+      <Screen name="UpdateForm" component={UpdateForm} />
       <Screen name="Complete" component={Complete} />
       <Screen name="PostDetail" component={PostDetail} />
       <Screen name="SubmitRating" component={SubmitRating} />
