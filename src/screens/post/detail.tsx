@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import Layout from '../../elements/layout';
-import { common, image, modal, signage, text } from '../../styles';
+import { button, common, image, modal, signage, text } from '../../styles';
 import ArrowHeader from '../../components/headers/arrowheader';
 import {
+  ActivityIndicator,
   Alert,
   Animated,
   Image,
@@ -38,30 +39,19 @@ const PostDetail = ({
   navigation,
   route,
 }: StackTabScreenProps<'PostDetail'> | any) => {
-  const {
-    _id,
-    type,
-    donation,
-    address,
-    postcode,
-    city,
-    state,
-    mobileNumber,
-    statusAvailability,
-    items,
-    geoLocation,
-    createdById,
-    createdByUserName,
-  } = route.params;
+  const { _id, createdById } = route.params;
 
-  console.log('CHECK FOOD ID: ', route.params._id);
-
-  const bannerImage = route.params?.image;
   const [globalState] = useStore();
-  const [rating, setRating] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<any>(false);
+  const [post, setPost] = useState<IPost | any>();
+  const [rating, setRating] = useState<any>();
 
-  const { latitude, longitude } = geoLocation;
-  const { startDateTime, endDateTime } = statusAvailability;
+  console.log('VIEW POST DETAIL: ', post);
+
+  const bannerImage = post?.image || '';
+  const { name, description } = post?.donation || {};
+  const { latitude, longitude } = post?.geoLocation || {};
+  const { startDateTime, endDateTime } = post?.statusAvailability || {};
   const { app } = globalState;
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -78,30 +68,35 @@ const PostDetail = ({
   useEffect(() => {
     const ratingAPI = new RatingAPI(app.token);
     const postAPI = new PostAPI(app.token);
-    async function viewPostedDetail() {
+
+    async function getInformation() {
+      setIsLoading(true);
       try {
-        const res: IPostRating = await ratingAPI.getRatingByPost(
-          createdById.id ? createdById.id : createdById,
-        );
-        if (res) {
-          setRating(res);
+        const [getPost, getRating]: [IPost, IPostRating] = await Promise.all([
+          postAPI.getPostById(_id),
+          ratingAPI.getRatingByPost(
+            createdById.id ? createdById.id : createdById,
+          ),
+        ]);
+
+        if (getPost) {
+          setPost(getPost);
+        }
+
+        if (getRating) {
+          setRating(getRating);
         }
       } catch (error) {
         Alert.alert('Oh uh! Some of the information could not loaded');
+      } finally {
+        setIsLoading(false);
       }
     }
 
-    async function getFoodById() {
-      try {
-        const res: IPost = await postAPI.getPostById(_id);
-        console.log('CHECK RESPONSE FOOD: ', res);
-      } catch (error) {}
-    }
     if (app.token) {
-      viewPostedDetail();
-      getFoodById();
+      getInformation();
     }
-  }, [_id, app.token, createdById, createdById.id]);
+  }, [_id, app.token, createdById]);
 
   const renderRating = () => {
     const score = rating?.ratingScore;
@@ -149,98 +144,108 @@ const PostDetail = ({
 
   return (
     <Layout custom={[common.basicLayout]}>
-      <ArrowHeader nav={navigation} title={donation.name} disableBack={false} />
+      <ArrowHeader nav={navigation} title={name} disableBack={false} />
       <ScrollView style={[common.paddingHorizontalContainer]}>
-        <Pressable onPress={handlePress}>
-          <Image
-            source={{ uri: bannerImage }}
-            style={[image.selectedThumbnail]}
-          />
-        </Pressable>
-        <View style={common.paddingVerticalMedium}>
-          <Text style={text.blackHeadingBold}>{donation.description}</Text>
-          <View style={common.paddingVerticalMedium}>
-            <Text style={text.greyBodyReg}>THE LOCATION</Text>
-            <Text
-              style={[
-                text.blackBodyHighlight,
-                text.lineHeightL,
-              ]}>{`${address},`}</Text>
-            <Text
-              style={[
-                text.blackBodyReg,
-                text.lineHeightL,
-              ]}>{`${postcode}, ${city}, ${state}`}</Text>
-            <Text
-              style={[
-                text.blackBodyHighlight,
-                text.lineHeightL,
-              ]}>{`${mobileNumber}`}</Text>
-          </View>
-          <View style={signage.postStatus}>
-            {startDateTime > today && endDateTime > today ? (
-              <Text style={[text.yellowLabelText]}>Upcoming</Text>
-            ) : startDateTime < today && endDateTime > today ? (
-              <Text style={[text.greenLabelText]}>Ongoing</Text>
-            ) : (
-              startDateTime < today &&
-              endDateTime < today && (
-                <Text style={text.redLabelText}>Expired</Text>
-              )
-            )}
-          </View>
-          <Text
-            style={[
-              text.blackBodyReg,
-              text.lineHeightL,
-            ]}>{`Available from ${Formatter.dateTime(
-            startDateTime,
-          )} to ${Formatter.dateTime(endDateTime)}`}</Text>
-          <View style={common.paddingVerticalMedium}>
-            <Text style={text.greyBodyReg}>{`${
-              type === 'Donation' ? 'DONATION' : 'REQUEST'
-            } ITEM`}</Text>
-            {items.map((item: IFoodItem) => (
-              <BasicList
-                key={item.id}
-                param={item.name}
-                value={item.price}
-                type={type}
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <>
+            <Pressable onPress={handlePress}>
+              <Image
+                source={{ uri: bannerImage }}
+                style={[image.selectedThumbnail]}
               />
-            ))}
-          </View>
-          <View style={common.paddingVerticalMedium}>
-            <Text style={text.greyBodyReg}>POSTED BY</Text>
-            <View
-              style={[common.paddingVerticalSmall, common.flexRowSpaceBetween]}>
-              <View style={[common.flexRow, common.centerVertically]}>
-                <CircleBackground>
-                  <UserIcon />
-                </CircleBackground>
-                <View style={common.paddingHorizontalContainer}>
-                  <Text
-                    style={[
-                      text.blackBodyHighlight,
-                      text.lineHeightL,
-                      common.paddingRightXSmall,
-                    ]}>{`${
-                    createdByUserName
-                      ? createdByUserName
-                      : createdById.username
-                      ? createdById.username
-                      : createdById
-                  }`}</Text>
-                  <Text
-                    style={[
-                      text.greyLabelText,
-                    ]}>{`Rating: ${rating?.ratingScore.toFixed(2)}`}</Text>
-                  <View style={common.flexRow}>{renderRating()}</View>
+            </Pressable>
+            <View style={common.paddingVerticalMedium}>
+              <Text style={text.blackHeadingBold}>{description}</Text>
+              <View style={common.paddingVerticalMedium}>
+                <Text style={text.greyBodyReg}>THE LOCATION</Text>
+                <Text
+                  style={[
+                    text.blackBodyHighlight,
+                    text.lineHeightL,
+                  ]}>{`${post?.address},`}</Text>
+                <Text
+                  style={[
+                    text.blackBodyReg,
+                    text.lineHeightL,
+                  ]}>{`${post?.postcode}, ${post?.city}, ${post?.state}`}</Text>
+                <Text
+                  style={[
+                    text.blackBodyHighlight,
+                    text.lineHeightL,
+                  ]}>{`${post?.mobileNumber}`}</Text>
+              </View>
+              <View style={signage.postStatus}>
+                {startDateTime > today && endDateTime > today ? (
+                  <Text style={[text.yellowLabelText]}>Upcoming</Text>
+                ) : startDateTime < today && endDateTime > today ? (
+                  <Text style={[text.greenLabelText]}>Ongoing</Text>
+                ) : (
+                  startDateTime < today &&
+                  endDateTime < today && (
+                    <Text style={text.redLabelText}>Expired</Text>
+                  )
+                )}
+              </View>
+              {post && (
+                <Text
+                  style={[
+                    text.blackBodyReg,
+                    text.lineHeightL,
+                  ]}>{`Available from ${Formatter?.dateTime(
+                  startDateTime,
+                )} to ${Formatter?.dateTime(endDateTime)}`}</Text>
+              )}
+              <View style={common.paddingVerticalMedium}>
+                <Text style={text.greyBodyReg}>{`${
+                  post?.type === 'Donation' ? 'DONATION' : 'REQUEST'
+                } ITEM`}</Text>
+                {post?.items.map((item: IFoodItem) => (
+                  <BasicList
+                    key={item.id}
+                    param={item.name}
+                    value={item.price}
+                    type={post?.type}
+                  />
+                ))}
+              </View>
+              <View style={common.paddingVerticalMedium}>
+                <Text style={text.greyBodyReg}>POSTED BY</Text>
+                <View
+                  style={[
+                    common.paddingVerticalSmall,
+                    common.flexRowSpaceBetween,
+                  ]}>
+                  <View style={[common.flexRow, common.centerVertically]}>
+                    <CircleBackground>
+                      <UserIcon />
+                    </CircleBackground>
+                    <View style={common.paddingHorizontalContainer}>
+                      <Text
+                        style={[
+                          text.blackBodyHighlight,
+                          text.lineHeightL,
+                          common.paddingRightXSmall,
+                        ]}>{`${post?.createdByUserName}`}</Text>
+                      <Text
+                        style={[
+                          text.greyLabelText,
+                        ]}>{`Rating: ${rating?.ratingScore.toFixed(2)}`}</Text>
+                      <View style={common.flexRow}>{renderRating()}</View>
+                    </View>
+                  </View>
+                  <TextButton caption="View Feedback" onPress={viewDetails} />
                 </View>
               </View>
-              <TextButton caption="View Feedback" onPress={viewDetails} />
             </View>
-          </View>
-        </View>
+            {post?.createdById === app.profile._id && (
+              <Text
+                onPress={() => navigation.navigate('UpdateForm', post)}
+                style={button.footerWithoutBorder}>{`Update Post`}</Text>
+            )}
+          </>
+        )}
       </ScrollView>
       <BottomActionButton
         content={'Show Me The Way'}
