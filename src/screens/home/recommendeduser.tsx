@@ -15,7 +15,6 @@ const RecommendedUser = ({
   navigation,
   route,
 }: StackTabScreenProps<'RecommendedUser'> | any) => {
-  console.log('CHECK ROUTE PARAM: ', route.params);
   const { providerName, ratingScore, foodDonation, reviews } = route.params;
 
   const [isActive, setIsActive] = useState<string>('Posts');
