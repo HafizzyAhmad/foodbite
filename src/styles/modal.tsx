@@ -59,4 +59,9 @@ export default StyleSheet.create({
     width: '87%',
     padding: 6,
   },
+  modalClose: {
+    position: 'absolute',
+    right: 30,
+    top: 50,
+  },
 });
