@@ -34,6 +34,7 @@ import { IPostRating } from '../../types/stores/rating';
 import TextButton from '../../components/buttons/textbutton';
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 import PostAPI from '../../api/post';
+import ConfirmationModal from '../../components/modals/confirmation';
 
 const PostDetail = ({
   navigation,
@@ -54,6 +55,9 @@ const PostDetail = ({
   const { startDateTime, endDateTime } = post?.statusAvailability || {};
   const { app } = globalState;
 
+  const ratingAPI = new RatingAPI(app.token);
+  const postAPI = new PostAPI(app.token);
+
   const [modalVisible, setModalVisible] = useState(false);
   const zoomAnimatedValue = React.useRef(new Animated.Value(1)).current;
 
@@ -66,9 +70,6 @@ const PostDetail = ({
   };
 
   useEffect(() => {
-    const ratingAPI = new RatingAPI(app.token);
-    const postAPI = new PostAPI(app.token);
-
     async function getInformation() {
       setIsLoading(true);
       try {
@@ -96,6 +97,7 @@ const PostDetail = ({
     if (app.token) {
       getInformation();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_id, app.token, createdById]);
 
   const renderRating = () => {
@@ -141,6 +143,23 @@ const PostDetail = ({
   };
 
   const today = new Date().toISOString();
+
+  const [showModalDeletePost, setShowModalDeletePost] = useState(false);
+
+  const deletePost = async () => {
+    setShowModalDeletePost(false);
+    try {
+      const res = await postAPI.deletePostById(_id);
+      if (res) {
+        navigation.goBack();
+        Alert.alert('Success', 'Your registration has been completed', [
+          { text: 'Bring me to Login', onPress: () => navigation.goBack() },
+        ]);
+      }
+    } catch (error) {
+      Alert.alert('Oh uh! Something went wrong', error as string);
+    }
+  };
 
   return (
     <Layout custom={[common.basicLayout]}>
@@ -240,9 +259,16 @@ const PostDetail = ({
               </View>
             </View>
             {post?.createdById === app.profile._id && (
-              <Text
-                onPress={() => navigation.navigate('UpdateForm', post)}
-                style={button.footerWithoutBorder}>{`Update Post`}</Text>
+              <View style={common.centerVertically}>
+                <Pressable
+                  onPress={() => navigation.navigate('UpdateForm', post)}
+                  style={button.primarySmall}>
+                  <Text style={text.whiteButton}>{`Update Post`}</Text>
+                </Pressable>
+                <Text
+                  onPress={() => setShowModalDeletePost(true)}
+                  style={button.footerWithoutBorder}>{`Delete Post`}</Text>
+              </View>
             )}
           </>
         )}
@@ -278,6 +304,14 @@ const PostDetail = ({
         </Pressable>
         {/* </View> */}
       </Modal>
+      <ConfirmationModal
+        setModalVisible={setShowModalDeletePost}
+        modalVisible={showModalDeletePost}
+        title="Delete Post?"
+        caption="Are you sure you want to delete this post"
+        buttonCaption="Yes Proceed"
+        buttonAction={deletePost}
+      />
     </Layout>
   );
 };
