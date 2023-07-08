@@ -8,7 +8,7 @@ class HTTP {
   token: string | null;
   instance: AxiosInstance = axios.create({
     baseURL: URL.API,
-    timeout: 10000,
+    timeout: 36000,
     headers: {
       'Content-type': 'application/json',
     },
