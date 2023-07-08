@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../elements/layout';
 import { common } from '../../styles';
-import { Alert, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, View } from 'react-native';
 import { StackTabScreenProps } from '../../types/routes/main';
 import { TabActive, TabInActive } from '../../components/tab';
 import ImageTile from '../../components/images/tile';
@@ -23,18 +23,22 @@ const ProfileMain = ({
   const [score, setScore] = useState<number>(0);
   const { app } = globalState;
   const isFocused = useIsFocused();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const rateAPI = new RatingAPI(app.token);
     async function getRatingProfile() {
+      setLoading(true);
       try {
         const res: IRating = await rateAPI.getRatingById(app.profile._id);
         if (res) {
           setFoodDonation(res.foodDonation);
           setReviews(res.reviews);
           setScore(res.ratingScore);
+          setLoading(false);
         }
       } catch (error) {
+        setLoading(false);
         Alert.alert('Oh uh! Some of the information could not loaded');
       }
     }
@@ -90,7 +94,7 @@ const ProfileMain = ({
             ),
           )}
         </View>
-        {determineTab()}
+        {loading ? <ActivityIndicator /> : determineTab()}
       </ScrollView>
     </Layout>
   );

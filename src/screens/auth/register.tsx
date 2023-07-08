@@ -71,7 +71,7 @@ const RegisterProfile = ({ navigation }: any) => {
         ]);
       }
     } catch (error) {
-      Alert.alert('Oh uh! Something went wrong', error as string);
+      Alert.alert('Oh uh! Something went wrong');
     }
   };
 
