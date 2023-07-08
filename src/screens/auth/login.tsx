@@ -6,6 +6,7 @@ import {
   Alert,
   ImageBackground,
   KeyboardAvoidingView,
+  Platform,
   StyleProp,
   Text,
   TextInput,
@@ -21,12 +22,11 @@ import { useOffset } from '../../hooks/use-offset';
 import PrimaryButton from '../../components/buttons/primary';
 import IMAGE from '../../constants/image';
 import { StackTabScreenProps } from '../../types/routes/main';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
-  const [globalState, dispatch] = useStore();
+  const [, dispatch] = useStore();
   const [isLogging, setIsLogging] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [loginData, setLoginData] = useState<object>({});
   const { heightOffset, onIncrementFocus } = useOffset();
 
   const [emailAddress, setEmailAddress] = useState<string>('');
@@ -35,8 +35,6 @@ const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
   const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
   const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
   const [isDisabledLogin, setDisabledLogin] = useState<boolean>(true);
-
-  const { app } = globalState;
 
   useEffect((): void => {
     function checkInput(): void {
@@ -70,13 +68,16 @@ const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
   };
 
   async function onLogin() {
+    setIsLogging(true);
     try {
       const res = await authAPI.login(params);
       if (res) {
         dispatch(authenticateSuccess(res));
+        setIsLogging(false);
       }
-    } catch (error) {
-      Alert.alert(error as string);
+    } catch (error: any) {
+      setIsLogging(false);
+      Alert.alert('Please check your email and password');
     }
   }
 
@@ -112,7 +113,7 @@ const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
   ];
 
   return (
-    <>
+    <ScrollView>
       <ImageBackground
         source={IMAGE.loginBanner}
         style={[image.squareImage]}
@@ -128,9 +129,8 @@ const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
       <View style={[common.basicLayout, common.paddingContainer]}>
         <KeyboardAvoidingView
           enabled
-          // keyboardVerticalOffset={Platform.OS === 'ios' ? heightOffset : 0}
-          // behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
+          keyboardVerticalOffset={Platform.OS === 'ios' ? heightOffset : 0}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           {loginConfig.map(
             ({ key, placeholder, type, secureTextEntry, ...options }) => {
               /**
@@ -217,6 +217,7 @@ const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
           buttonText="LOGIN NOW"
           nav={onLogin}
           disable={isDisabledLogin}
+          loading={isLogging}
         />
         <Text
           onPress={onRegister}
@@ -224,7 +225,7 @@ const LoginMain = ({ navigation }: StackTabScreenProps<'LoginMain'>) => {
           New User? Register Now
         </Text>
       </View>
-    </>
+    </ScrollView>
   );
 };
 
