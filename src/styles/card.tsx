@@ -2,7 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 import color from './color';
 import common from './common';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const BASE = {
   // marginHorizontal: 15,
@@ -59,7 +59,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     width: '90%',
-    height: 120,
+    height: 130,
     padding: 15,
   },
   tileCard: {

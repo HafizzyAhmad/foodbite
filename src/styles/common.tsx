@@ -19,6 +19,9 @@ export default StyleSheet.create({
   contentCenter: {
     alignContent: 'center',
   },
+  alignSelfEnd: {
+    alignSelf: 'flex-end',
+  },
   centerVertically: {
     alignItems: 'center',
   },
